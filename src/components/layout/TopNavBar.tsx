@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ThemeSelector } from "@/components/ui/ThemeSelector";
 
@@ -17,12 +18,19 @@ export function TopNavBar() {
   };
 
   return (
-    <header className="sticky top-0 left-0 right-0 w-full z-40 bg-background/80 backdrop-blur-md border-b border-outline/50 h-16 flex items-center justify-between px-4 sm:px-8 select-none transition-colors">
-      {/* Brand */}
+    <header className="sticky top-0 left-0 right-0 w-full z-40 bg-background/85 backdrop-blur-md border-b border-outline/50 h-16 flex items-center justify-between px-4 sm:px-8 select-none transition-colors">
+      {/* Brand with Small Mascot Logo */}
       <div className="flex items-center gap-3">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:scale-105 transition-transform">
-            r
+          <div className="relative w-8 h-8 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105">
+            <Image
+              src="/mascot.png"
+              alt="Reddit Profile Mascot"
+              width={32}
+              height={32}
+              priority
+              className="w-full h-full object-contain"
+            />
           </div>
           <span className="font-semibold text-base sm:text-lg text-on-surface tracking-tight">
             Profile Viewer

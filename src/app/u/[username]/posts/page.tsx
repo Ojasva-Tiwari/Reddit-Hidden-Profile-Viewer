@@ -179,6 +179,8 @@ export default function PostsFeedPage({ params }: { params: { username: string }
                     <img
                       src={post.url}
                       alt={post.title}
+                      loading="lazy"
+                      decoding="async"
                       className="max-h-72 w-auto max-w-full object-contain rounded-lg"
                     />
                   </div>

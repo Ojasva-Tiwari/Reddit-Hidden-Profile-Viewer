@@ -50,6 +50,8 @@ export function MediaReferenceViewer({
             <img
               src={imageSrc}
               alt="Media Preview"
+              loading="lazy"
+              decoding="async"
               className="max-h-96 w-auto max-w-full object-contain rounded-xl transition-transform duration-200 group-hover:scale-[1.01]"
             />
             <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -80,6 +82,8 @@ export function MediaReferenceViewer({
           <img
             src={activeThumb}
             alt="Thumbnail"
+            loading="lazy"
+            decoding="async"
             onClick={() => setLightboxOpen(true)}
             className="w-20 h-20 object-cover rounded-xl border border-outline/40 bg-surface cursor-zoom-in flex-shrink-0"
           />
@@ -129,6 +133,7 @@ export function MediaReferenceViewer({
             <img
               src={imageSrc}
               alt="Fullscreen Preview"
+              decoding="async"
               className="max-h-[85vh] max-w-full object-contain rounded-2xl shadow-2xl"
             />
             <button

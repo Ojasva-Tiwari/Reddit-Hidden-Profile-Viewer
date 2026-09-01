@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { UserProfile } from "@/types";
 
 export function ProfileHeader({ username }: { username: string }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
 
   const loadProfile = async () => {
@@ -17,8 +17,6 @@ export function ProfileHeader({ username }: { username: string }) {
       }
     } catch (e) {
       console.error(e);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -53,11 +51,15 @@ export function ProfileHeader({ username }: { username: string }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* User Monogram & Name */}
         <div className="flex items-center gap-3.5">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-surface-container border border-outline/50 flex items-center justify-center text-primary font-bold text-xl overflow-hidden flex-shrink-0 shadow-sm">
+          <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-surface-container border border-outline/50 flex items-center justify-center text-primary font-bold text-xl overflow-hidden flex-shrink-0 shadow-sm">
             {profile?.avatarUrl ? (
-              <img
+              <Image
                 src={profile.avatarUrl}
                 alt={`u/${username}`}
+                width={64}
+                height={64}
+                unoptimized
+                priority
                 className="w-full h-full object-cover"
               />
             ) : (

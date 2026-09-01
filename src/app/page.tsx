@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Card } from "@/components/ui/Card";
 
 export default function HomePage() {
@@ -22,20 +21,6 @@ export default function HomePage() {
 
   return (
     <main className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 max-w-5xl mx-auto w-full py-12 sm:py-20 relative">
-      {/* Top Right Mascot */}
-      <div className="absolute top-2 right-4 sm:top-4 sm:right-8 md:right-12 pointer-events-none select-none z-10">
-        <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 transition-transform duration-300 hover:scale-105">
-          <Image
-            src="/mascot.png"
-            alt="Reddit Profile Mascot"
-            width={160}
-            height={160}
-            priority
-            className="w-full h-full object-contain drop-shadow-md"
-          />
-        </div>
-      </div>
-
       {/* Hero Section */}
       <div className="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-10">
         <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-on-surface">

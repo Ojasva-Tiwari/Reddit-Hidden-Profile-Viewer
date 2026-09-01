@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { TopNavBar } from "@/components/layout/TopNavBar";
 import { GlobalFooter } from "@/components/layout/GlobalFooter";
+import { DecorativeMascot } from "@/components/layout/DecorativeMascot";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,6 +21,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Reddit Profile Viewer",
   description: "Look up a Reddit profile with its posts, comments, history, and evidence-backed insights.",
+  icons: {
+    icon: "/mascot.png",
+  },
 };
 
 export default function RootLayout({
@@ -52,10 +56,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-on-background min-h-screen flex flex-col antialiased transition-colors`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-on-background min-h-screen flex flex-col antialiased transition-colors relative`}>
         <ThemeProvider>
           <TopNavBar />
-          <div className="flex-1 flex flex-col">
+          {/* Shared Decorative Mascot across all pages */}
+          <DecorativeMascot />
+          <div className="flex-1 flex flex-col relative z-10">
             {children}
           </div>
           <GlobalFooter />

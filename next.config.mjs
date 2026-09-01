@@ -24,6 +24,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "preview.redd.it",
       },
+      {
+        protocol: "https",
+        hostname: "external-preview.redd.it",
+      },
+      {
+        protocol: "https",
+        hostname: "i.imgur.com",
+      },
+      {
+        protocol: "https",
+        hostname: "imgur.com",
+      },
     ],
   },
   async headers() {
