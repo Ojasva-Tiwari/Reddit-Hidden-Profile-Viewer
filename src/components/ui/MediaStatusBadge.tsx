@@ -11,57 +11,51 @@ interface MediaStatusBadgeProps {
 export function MediaStatusBadge({ status, className, size = "md" }: MediaStatusBadgeProps) {
   const normalized = (status || "MEDIA_UNAVAILABLE").toUpperCase() as MediaStatus;
 
+  if (normalized === "MEDIA_UNAVAILABLE") return null;
+
   const getStatusStyles = () => {
     switch (normalized) {
       case "MEDIA_AVAILABLE":
-        return "text-[#3fb950] bg-[#3fb950]/15 border-[#3fb950]/30";
       case "ARCHIVED_COPY":
-        return "text-secondary bg-secondary/15 border-secondary/30";
+        return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
       case "THUMBNAIL_AVAILABLE":
-        return "text-[#d29922] bg-[#d29922]/15 border-[#d29922]/30";
+        return "text-amber-500 bg-amber-500/10 border-amber-500/20";
       case "MEDIA_REFERENCE_ONLY":
-        return "text-[#58a6ff] bg-[#58a6ff]/15 border-[#58a6ff]/30";
-      case "MEDIA_UNAVAILABLE":
       default:
-        return "text-on-surface-variant/60 bg-surface-container-high border-outline/40";
+        return "text-blue-500 bg-blue-500/10 border-blue-500/20";
     }
   };
 
   const getLabel = () => {
     switch (normalized) {
       case "MEDIA_AVAILABLE":
-        return "MEDIA AVAILABLE";
       case "ARCHIVED_COPY":
-        return "ARCHIVED COPY";
+        return "image preview";
       case "THUMBNAIL_AVAILABLE":
-        return "THUMBNAIL ONLY";
+        return "thumbnail";
       case "MEDIA_REFERENCE_ONLY":
-        return "MEDIA REF ONLY";
-      case "MEDIA_UNAVAILABLE":
       default:
-        return "NO MEDIA";
+        return "external link";
     }
   };
 
-  const sizeStyles = size === "sm" ? "px-[6px] py-[1px] text-[9px]" : "px-sm py-[2px] text-label-caps";
+  const sizeStyles = size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs";
 
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-[4px] font-label-caps uppercase tracking-wider rounded-sm border",
+        "inline-flex items-center gap-1 font-medium rounded-full border transition-colors",
         getStatusStyles(),
         sizeStyles,
         className
       )}
     >
-      <span className="material-symbols-outlined text-[12px]">
+      <span className="material-symbols-outlined text-[13px]">
         {normalized === "MEDIA_AVAILABLE" || normalized === "ARCHIVED_COPY"
-          ? "photo_library"
-          : normalized === "THUMBNAIL_AVAILABLE"
           ? "image"
-          : normalized === "MEDIA_REFERENCE_ONLY"
-          ? "link"
-          : "hide_image"}
+          : normalized === "THUMBNAIL_AVAILABLE"
+          ? "photo_size_select_actual"
+          : "link"}
       </span>
       <span>{getLabel()}</span>
     </span>

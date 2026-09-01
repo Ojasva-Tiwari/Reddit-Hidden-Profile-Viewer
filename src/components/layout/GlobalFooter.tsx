@@ -1,29 +1,27 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
-export function GlobalFooter({ className }: { className?: string }) {
+export function GlobalFooter() {
   return (
-    <footer className={`w-full py-md px-gutter border-t border-outline bg-surface-container-lowest text-on-surface-variant font-code text-code select-none ${className || ""}`}>
-      <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-sm text-[12px]">
-        <div className="flex items-center gap-xs">
+    <footer className="w-full border-t border-outline/40 py-8 px-4 sm:px-8 mt-auto bg-background/50 transition-colors">
+      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+        <div className="flex items-center gap-1.5">
           <span>Made by</span>
           <span className="text-on-surface font-medium">Ojasva Tiwari</span>
         </div>
 
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-4">
           <Link
             href="https://github.com/Ojasva-Tiwari/Reddit-Hidden-Profile-Viewer"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-xs hover:text-primary transition-colors"
+            className="hover:text-primary transition-colors flex items-center gap-1"
           >
-            <span className="material-symbols-outlined text-[16px]" data-icon="terminal">
-              terminal
-            </span>
-            <span>GitHub Repository</span>
+            <span className="material-symbols-outlined text-[16px]">code</span>
+            <span>GitHub</span>
           </Link>
-          <span className="text-outline">|</span>
-          <span className="text-on-surface-variant/60">Forensic Archive v1.0</span>
         </div>
       </div>
     </footer>

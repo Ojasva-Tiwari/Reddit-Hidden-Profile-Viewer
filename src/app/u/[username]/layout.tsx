@@ -1,5 +1,6 @@
 import React from "react";
-import { WorkbenchSidebar } from "@/components/layout/WorkbenchSidebar";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileNavTabs } from "@/components/profile/ProfileNavTabs";
 
 export default function ProfileWorkbenchLayout({
   children,
@@ -8,17 +9,18 @@ export default function ProfileWorkbenchLayout({
   children: React.ReactNode;
   params: { username: string };
 }) {
-  const username = decodeURIComponent(params.username);
+  const username = decodeURIComponent(params.username).replace(/^u\//i, "");
 
   return (
-    <div className="flex flex-1 w-full min-h-[calc(100vh-48px)]">
-      {/* 300px Fixed Sidebar */}
-      <WorkbenchSidebar username={username} />
+    <div className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-16 space-y-6">
+      {/* Clean Profile Header */}
+      <ProfileHeader username={username} />
 
-      {/* Main Content Area (offset by 300px on desktop) */}
-      <main className="flex-1 ml-0 md:ml-[300px] p-margin-mobile md:p-margin-desktop w-full max-w-[1280px] mx-auto flex flex-col gap-lg pb-xl">
-        {children}
-      </main>
+      {/* Horizontal Navigation Pills */}
+      <ProfileNavTabs username={username} />
+
+      {/* Subpage Content */}
+      <main className="w-full">{children}</main>
     </div>
   );
 }

@@ -31,14 +31,10 @@ export function EvidenceViewModal({
   redditId,
   sourceType,
   subreddit,
-  score,
-  commentsCount,
   exactQuote,
   fullText,
   correlationNotes,
   status,
-  capturedUtc,
-  sourceOrigin = "ARCTIC_SHIFT",
   onOpenContentDetail,
 }: EvidenceViewModalProps) {
   const [copied, setCopied] = useState(false);
@@ -52,123 +48,104 @@ export function EvidenceViewModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-md bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-surface-container-low border border-outline w-full max-w-3xl max-h-[92vh] rounded-sm shadow-2xl flex flex-col overflow-hidden">
-        {/* Modal Header */}
-        <div className="p-md border-b border-outline flex items-start justify-between gap-md bg-surface">
-          <div>
-            <div className="flex items-center gap-xs font-label-caps text-label-caps text-primary mb-xs">
-              <span className="material-symbols-outlined text-[16px]" data-icon="policy">
-                policy
-              </span>
-              <span>GROUNDED EVIDENCE CITATION (INSIGHT #{insightNumber})</span>
-            </div>
-            <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-surface border border-outline/60 w-full max-w-2xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-150"
+      >
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-outline/40 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+              #{insightNumber}
+            </span>
+            <h3 className="font-semibold text-base text-on-surface line-clamp-1">
               {insightTitle}
             </h3>
           </div>
+
           <button
             onClick={onClose}
-            className="p-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-sm transition-colors flex-shrink-0"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px]" data-icon="close">
-              close
-            </span>
+            <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
-        {/* Scrollable Body */}
-        <div className="p-md md:p-lg overflow-y-auto flex-1 space-y-lg font-body-base text-body-base leading-relaxed">
-          {/* Section 1: SOURCE RECORD & ARCHIVE METADATA */}
-          <div className="space-y-xs">
-            <h4 className="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs">
-              <span className="material-symbols-outlined text-[16px] text-secondary">database</span>
-              <span>1. SOURCE RECORD & ARCHIVAL METADATA</span>
-            </h4>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-xs p-sm bg-surface-container-lowest border border-outline rounded-sm font-code text-code text-[11px]">
-              <div>
-                <span className="text-on-surface-variant block text-[10px]">RECORD TYPE</span>
-                <span className="text-primary font-bold uppercase">{sourceType}</span>
-              </div>
-              <div>
-                <span className="text-on-surface-variant block text-[10px]">REDDIT FULLNAME</span>
-                <span className="text-secondary font-bold">{redditId}</span>
-              </div>
-              <div>
-                <span className="text-on-surface-variant block text-[10px]">COMMUNITY</span>
-                <span className="text-on-surface">r/{subreddit}</span>
-              </div>
-              <div>
-                <span className="text-on-surface-variant block text-[10px]">STATUS</span>
-                <div className="mt-[2px]">
-                  <StatusBadge status={status} size="sm" />
-                </div>
-              </div>
-            </div>
+        {/* Body */}
+        <div className="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6">
+          {/* Supporting Quote */}
+          <div className="space-y-2">
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+              Supporting Evidence
+            </span>
+            <blockquote className="p-4 sm:p-5 bg-surface-container rounded-2xl border border-primary/20 text-on-surface font-serif text-base italic leading-relaxed">
+              &ldquo;{exactQuote}&rdquo;
+            </blockquote>
           </div>
 
-          {/* Section 2: EXTRACTED EVIDENCE QUOTE */}
-          <div className="space-y-xs">
-            <h4 className="font-label-caps text-label-caps text-secondary flex items-center gap-xs">
-              <span className="material-symbols-outlined text-[16px]">format_quote</span>
-              <span>2. EXTRACTED SUPPORTING QUOTE</span>
-            </h4>
-            <div className="p-md bg-[#0D1117] border-l-2 border-secondary rounded-r-sm font-body-base text-on-surface italic">
-              &quot;{exactQuote}&quot;
+          {/* Context & Source Details */}
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-on-surface-variant p-3 bg-surface-container rounded-xl border border-outline/40">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-on-surface">r/{subreddit}</span>
+              <span>•</span>
+              <span className="capitalize">{sourceType.toLowerCase()}</span>
+              <span>•</span>
+              <StatusBadge status={status} size="sm" />
             </div>
+
+            {onOpenContentDetail && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenContentDetail(redditId);
+                }}
+                className="text-primary hover:underline font-medium flex items-center gap-1"
+              >
+                <span>View full post</span>
+                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              </button>
+            )}
           </div>
 
-          {/* Section 3: AI INSIGHT CORRELATION */}
-          <div className="space-y-xs">
-            <h4 className="font-label-caps text-label-caps text-primary flex items-center gap-xs">
-              <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-              <span>3. SYNTHESIS CORRELATION NOTES</span>
-            </h4>
-            <p className="font-body-dense text-body-dense text-on-surface-variant p-sm bg-surface-container-lowest border border-outline rounded-sm">
-              {correlationNotes}
-            </p>
-          </div>
+          {/* Reasoning */}
+          {correlationNotes && (
+            <div className="space-y-1.5 text-xs">
+              <span className="font-semibold text-on-surface">Why this supports the insight:</span>
+              <p className="text-on-surface-variant leading-relaxed bg-surface-container/60 p-3.5 rounded-xl border border-outline/30">
+                {correlationNotes}
+              </p>
+            </div>
+          )}
 
-          {/* Section 4: COMPLETE SUPPORTING CONTEXT */}
-          <div className="space-y-xs">
-            <div className="flex items-center justify-between">
-              <h4 className="font-label-caps text-label-caps text-on-surface-variant">
-                4. COMPLETE {sourceType} TEXTUAL CONTEXT
-              </h4>
-              {onOpenContentDetail && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    onOpenContentDetail(redditId);
-                  }}
-                  className="font-label-caps text-label-caps text-secondary hover:underline flex items-center gap-[2px]"
-                >
-                  <span>OPEN FULL CONTENT DETAIL</span>
-                  <span className="material-symbols-outlined text-[12px]">open_in_new</span>
-                </button>
-              )}
+          {/* Full context preview */}
+          {fullText && fullText !== exactQuote && (
+            <div className="space-y-1.5 text-xs">
+              <span className="font-semibold text-on-surface">Surrounding context:</span>
+              <div className="p-3.5 bg-surface-container/40 rounded-xl border border-outline/30 text-on-surface-variant max-h-40 overflow-y-auto whitespace-pre-wrap leading-relaxed">
+                {fullText}
+              </div>
             </div>
-            <div className="p-md bg-surface-container-lowest border border-outline rounded-sm font-body-dense text-on-surface max-h-48 overflow-y-auto whitespace-pre-wrap">
-              {fullText || "(No surrounding textual body)"}
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Modal Actions */}
-        <div className="p-sm px-md border-t border-outline bg-surface-container flex items-center justify-between">
+        {/* Footer */}
+        <div className="px-6 py-3.5 border-t border-outline/40 bg-surface-container flex items-center justify-between">
           <Button
             variant="ghost"
             size="sm"
             icon={copied ? "check" : "content_copy"}
             onClick={handleCopy}
           >
-            {copied ? "COPIED TO CLIPBOARD" : "COPY EVIDENCE QUOTE"}
+            {copied ? "Copied" : "Copy quote"}
           </Button>
 
-          <Button variant="secondary" size="sm" onClick={onClose}>
-            CLOSE
+          <Button variant="primary" size="sm" onClick={onClose}>
+            Done
           </Button>
         </div>
       </div>

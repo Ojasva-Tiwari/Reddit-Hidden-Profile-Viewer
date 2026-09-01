@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { ConfidenceBadge, ClassificationBadge } from "@/components/ui/StatusBadge";
-import { Button } from "@/components/ui/Button";
 import { LoadingState, ErrorState, EmptyState } from "@/components/ui/StateDisplays";
 import { EvidenceViewModal } from "@/components/modals/EvidenceViewModal";
 import { InsightItem, ProfileSummaryOutput } from "@/lib/ai/schemas";
@@ -21,7 +20,6 @@ export default function AISummaryPage({ params }: { params: { username: string }
   // Evidence Modal State
   const [selectedInsight, setSelectedInsight] = useState<InsightItem | null>(null);
   const [evidenceRecord, setEvidenceRecord] = useState<any | null>(null);
-  const [evidenceLoading, setEvidenceLoading] = useState<boolean>(false);
 
   const fetchSummary = async () => {
     setLoading(true);
@@ -33,7 +31,7 @@ export default function AISummaryPage({ params }: { params: { username: string }
 
       if (!res.ok || json.error) {
         setErrorCode(json.error?.code || "ERROR");
-        setError(json.error?.message || "Failed to generate AI profile summary.");
+        setError(json.error?.message || "Failed to generate profile insights.");
       } else {
         setSummaryData(json.data);
       }
@@ -56,7 +54,7 @@ export default function AISummaryPage({ params }: { params: { username: string }
 
       if (!res.ok || json.error) {
         setErrorCode(json.error?.code || "ERROR");
-        setError(json.error?.message || "Failed to refresh AI summary.");
+        setError(json.error?.message || "Failed to refresh insights.");
       } else {
         setSummaryData(json.data);
       }
@@ -72,7 +70,6 @@ export default function AISummaryPage({ params }: { params: { username: string }
     const firstEvidenceId = insight.evidenceIds[0];
     if (!firstEvidenceId) return;
 
-    setEvidenceLoading(true);
     try {
       const res = await fetch(`/api/content/${encodeURIComponent(firstEvidenceId)}`);
       const json = await res.json();
@@ -82,7 +79,7 @@ export default function AISummaryPage({ params }: { params: { username: string }
         setEvidenceRecord({
           redditId: firstEvidenceId,
           type: firstEvidenceId.startsWith("t1") ? "COMMENT" : "POST",
-          subreddit: insight.subredditContext || "unknown",
+          subreddit: insight.subredditContext || "reddit",
           status: "VISIBLE",
           score: 1,
           body: insight.finding,
@@ -92,13 +89,11 @@ export default function AISummaryPage({ params }: { params: { username: string }
       setEvidenceRecord({
         redditId: firstEvidenceId,
         type: firstEvidenceId.startsWith("t1") ? "COMMENT" : "POST",
-        subreddit: insight.subredditContext || "unknown",
+        subreddit: insight.subredditContext || "reddit",
         status: "VISIBLE",
         score: 1,
         body: insight.finding,
       });
-    } finally {
-      setEvidenceLoading(false);
     }
   };
 
@@ -108,21 +103,19 @@ export default function AISummaryPage({ params }: { params: { username: string }
 
   if (loading) {
     return (
-      <LoadingState
-        message={`Synthesizing evidence-backed profile insights for u/${username} with Gemini...`}
-      />
+      <LoadingState message={`Generating 30 insights for u/${username}...`} />
     );
   }
 
   if (errorCode === "INSUFFICIENT_DATA") {
     return (
       <EmptyState
-        title="Insufficient Archival Evidence"
+        title="Not enough public data"
         description={
           error ||
-          "The archive does not contain enough evidence to generate 30 reliable insights without speculating."
+          "This profile does not have enough public activity to generate 30 insights without speculating."
         }
-        actionLabel="RE-CHECK ARCHIVE"
+        actionLabel="Retry"
         onAction={fetchSummary}
       />
     );
@@ -131,7 +124,7 @@ export default function AISummaryPage({ params }: { params: { username: string }
   if (error && !summaryData) {
     return (
       <ErrorState
-        title={errorCode === "RATE_LIMITED" ? "Rate Limit Exceeded" : "AI Synthesis Error"}
+        title={errorCode === "RATE_LIMITED" ? "Rate limit reached" : "Could not generate insights"}
         message={error}
         onRetry={fetchSummary}
       />
@@ -146,132 +139,105 @@ export default function AISummaryPage({ params }: { params: { username: string }
   );
 
   return (
-    <>
+    <div className="space-y-6">
       {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md pb-xs border-b border-outline">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-xs font-label-caps text-label-caps text-primary mb-xs">
-            <span className="material-symbols-outlined text-[18px]" data-icon="auto_awesome">
-              auto_awesome
-            </span>
-            <span>PHASE 2 — EVIDENCE-BACKED AI SYNTHESIS</span>
-          </div>
-          <h1 className="font-headline-md text-headline-md text-on-surface font-bold">
-            {insights.length} Things About u/{username}
-          </h1>
-          <p className="font-code text-code text-on-surface-variant">
-            Target: u/{username} • Model: {summaryData?.modelVersion || "gemini-2.0-flash"} • Grounded Citations
+          <h2 className="text-xl sm:text-2xl font-bold text-on-surface">
+            30 Things About u/{username}
+          </h2>
+          <p className="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+            Key findings from public posts and comments — each backed by citations.
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          icon="refresh"
-          disabled={refreshing}
+        <button
           onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium bg-surface-container hover:bg-surface-container-high border border-outline/50 text-on-surface transition-colors disabled:opacity-50 self-start sm:self-auto"
         >
-          {refreshing ? "RE-SYNTHESIZING..." : "REFRESH INSIGHTS"}
-        </Button>
+          <span
+            className={`material-symbols-outlined text-[16px] ${
+              refreshing ? "animate-spin text-primary" : ""
+            }`}
+          >
+            refresh
+          </span>
+          <span>{refreshing ? "Refreshing..." : "Refresh insights"}</span>
+        </button>
       </div>
 
-      {/* Synthesis Metadata Banner */}
-      <Card
-        level={1}
-        density="normal"
-        className="border-primary/40 bg-surface-container-low flex flex-col md:flex-row items-start md:items-center justify-between gap-md"
-      >
-        <div className="space-y-xs">
-          <span className="font-label-caps text-label-caps text-primary font-semibold">
-            CITATION INTEGRITY AUDIT: PASSED
-          </span>
-          <p className="font-body-dense text-body-dense text-on-surface-variant max-w-2xl">
-            Every insight below is grounded in verified public Reddit records. Sensitive personal attributes (religion, medical, precise location, sexual orientation) are strictly prohibited.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-sm font-code text-code text-on-surface-variant">
-          <div className="text-right">
-            <span className="text-[10px] text-on-surface-variant block">VERIFIED EVIDENCE</span>
-            <span className="text-headline-sm text-primary font-bold">100% GROUNDED</span>
-          </div>
-        </div>
-      </Card>
-
-      {/* Category Filter Chips */}
-      <div className="flex items-center gap-xs overflow-x-auto pb-xs">
+      {/* Category filter pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-md py-xs rounded-sm font-label-caps text-label-caps whitespace-nowrap transition-colors border ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
               activeCategory === cat
-                ? "bg-secondary-container text-on-secondary-container border-secondary font-semibold"
-                : "bg-surface-container-low text-on-surface-variant border-outline hover:border-outline-variant hover:text-on-surface"
+                ? "bg-primary text-white font-semibold shadow-xs"
+                : "bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface border border-outline/40"
             }`}
           >
-            {cat.replace(/_/g, " ")}
+            {cat === "ALL" ? "All categories" : cat.replace(/_/g, " ").toLowerCase()}
           </button>
         ))}
       </div>
 
-      {/* Insights Grid */}
-      <div className="space-y-md">
+      {/* Insights List */}
+      <div className="space-y-4">
         {filteredInsights.map((insight) => (
-          <Card key={insight.id || insight.number} level={1} density="normal" className="space-y-sm">
-            {/* Header info */}
-            <div className="flex flex-wrap items-center justify-between gap-xs">
-              <div className="flex items-center gap-sm">
-                <span className="font-code text-headline-sm text-primary font-bold">
-                  #{String(insight.number).padStart(2, "0")}
+          <Card
+            key={insight.id || insight.number}
+            level={1}
+            density="normal"
+            className="space-y-3"
+          >
+            {/* Header badges */}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+                  #{insight.number}
                 </span>
                 <ClassificationBadge classification={insight.classification} />
                 <ConfidenceBadge confidence={insight.confidence} />
               </div>
 
-              <span className="font-label-caps text-label-caps text-on-surface-variant">
-                {insight.category.replace(/_/g, " ")}
+              <span className="text-xs text-on-surface-variant font-medium capitalize">
+                {insight.category.replace(/_/g, " ").toLowerCase()}
               </span>
             </div>
 
             {/* Title */}
-            <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+            <h3 className="text-base font-semibold text-on-surface leading-snug">
               {insight.title}
             </h3>
 
-            {/* Finding */}
-            <p className="font-body-base text-body-base text-on-surface leading-relaxed">
+            {/* Finding Description */}
+            <p className="text-sm text-on-surface leading-relaxed">
               {insight.finding}
             </p>
 
-            {/* Citations & Evidence Action */}
-            <div className="flex flex-wrap items-center justify-between gap-sm pt-xs border-t border-outline/40">
-              <div className="flex items-center gap-xs font-code text-code text-on-surface-variant">
-                <span>Citations:</span>
-                {insight.evidenceIds.map((id) => (
-                  <span
-                    key={id}
-                    className="text-secondary bg-surface-container-highest px-[5px] py-[1px] rounded-sm"
-                  >
-                    {id}
-                  </span>
-                ))}
-              </div>
+            {/* Evidence Link */}
+            <div className="flex items-center justify-between pt-2 border-t border-outline/30 text-xs text-on-surface-variant">
+              <span className="text-xs text-on-surface-variant">
+                {insight.evidenceIds.length} source quote{insight.evidenceIds.length > 1 ? "s" : ""}
+              </span>
 
-              <Button
-                variant="outline"
-                size="sm"
-                icon="policy"
+              <button
+                type="button"
                 onClick={() => handleOpenEvidence(insight)}
+                className="text-primary hover:underline font-medium flex items-center gap-1"
               >
-                VIEW EVIDENCE CITATION
-              </Button>
+                <span>View evidence</span>
+                <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+              </button>
             </div>
           </Card>
         ))}
       </div>
 
-      {/* Evidence View Modal (Screen 7) */}
+      {/* Evidence View Modal */}
       {selectedInsight && (
         <EvidenceViewModal
           isOpen={!!selectedInsight}
@@ -291,6 +257,6 @@ export default function AISummaryPage({ params }: { params: { username: string }
           status={evidenceRecord?.status || "VISIBLE"}
         />
       )}
-    </>
+    </div>
   );
 }

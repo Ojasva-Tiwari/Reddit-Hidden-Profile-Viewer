@@ -10,7 +10,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Dynamic CSS variables mapped to themes
         background: "var(--background)",
         "on-background": "var(--on-background)",
         surface: "var(--surface)",
@@ -46,7 +45,6 @@ const config: Config = {
         "error-container": "var(--error-container)",
         "on-error-container": "var(--on-error-container)",
         
-        // Semantic status tokens
         status: {
           visible: "var(--status-visible)",
           "visible-bg": "var(--status-visible-bg)",
@@ -61,42 +59,31 @@ const config: Config = {
         }
       },
       borderRadius: {
-        sm: "0.125rem",
-        DEFAULT: "0.25rem",
-        md: "0.375rem",
-        lg: "0.5rem",
-        xl: "0.75rem",
+        sm: "0.375rem", // 6px
+        DEFAULT: "0.5rem", // 8px
+        md: "0.625rem", // 10px
+        lg: "0.75rem", // 12px
+        xl: "1rem", // 16px
+        "2xl": "1.25rem", // 20px
+        "3xl": "1.5rem", // 24px
         full: "9999px",
       },
-      spacing: {
-        unit: "4px",
-        xs: "4px",
-        sm: "8px",
-        md: "12px",
-        lg: "16px",
-        xl: "24px",
-        gutter: "12px",
-        "margin-desktop": "24px",
-        "margin-mobile": "12px",
+      boxShadow: {
+        card: "0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)",
+        "card-hover": "0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06)",
+        modal: "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.15)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "sans-serif"],
+        sans: ["var(--font-inter)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
-        "display-lg": ["var(--font-inter)", "Inter", "sans-serif"],
-        "headline-md": ["var(--font-inter)", "Inter", "sans-serif"],
-        "headline-sm": ["var(--font-inter)", "Inter", "sans-serif"],
-        "body-base": ["var(--font-inter)", "Inter", "sans-serif"],
-        "body-dense": ["var(--font-inter)", "Inter", "sans-serif"],
-        "label-caps": ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
-        code: ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
       },
       fontSize: {
-        "display-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
-        "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }],
-        "headline-sm": ["16px", { lineHeight: "22px", letterSpacing: "-0.005em", fontWeight: "600" }],
-        "body-base": ["14px", { lineHeight: "20px", fontWeight: "400" }],
-        "body-dense": ["13px", { lineHeight: "18px", fontWeight: "400" }],
-        "label-caps": ["11px", { lineHeight: "14px", letterSpacing: "0.05em", fontWeight: "500" }],
+        "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.025em", fontWeight: "700" }],
+        "headline-md": ["22px", { lineHeight: "30px", letterSpacing: "-0.015em", fontWeight: "600" }],
+        "headline-sm": ["17px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }],
+        "body-base": ["15px", { lineHeight: "22px", fontWeight: "400" }],
+        "body-dense": ["13px", { lineHeight: "19px", fontWeight: "400" }],
+        "label-caps": ["11px", { lineHeight: "15px", letterSpacing: "0.03em", fontWeight: "600" }],
         code: ["12px", { lineHeight: "16px", fontWeight: "400" }],
       },
     },

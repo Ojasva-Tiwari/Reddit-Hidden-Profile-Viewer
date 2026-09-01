@@ -12,28 +12,28 @@ export function TopNavBar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchUser.trim()) {
-      router.push(`/u/${encodeURIComponent(searchUser.trim().replace(/^u\//, ""))}`);
+      router.push(`/u/${encodeURIComponent(searchUser.trim().replace(/^u\//i, ""))}`);
     }
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-surface border-b border-outline h-12 flex items-center justify-between px-gutter select-none">
-      {/* Brand & Terminal Identifier */}
-      <div className="flex items-center gap-md">
-        <Link href="/" className="flex items-center gap-xs group">
-          <span className="font-label-caps text-label-caps tracking-widest text-primary font-bold group-hover:opacity-80 transition-opacity">
-            OSINT_ARCHIVE
-          </span>
-          <span className="font-code text-[10px] text-on-surface-variant/70 border border-outline px-[4px] py-[1px] rounded-sm hidden sm:inline">
-            v1.0-FORENSIC
+    <header className="sticky top-0 left-0 right-0 w-full z-40 bg-background/80 backdrop-blur-md border-b border-outline/50 h-16 flex items-center justify-between px-4 sm:px-8 select-none transition-colors">
+      {/* Brand */}
+      <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:scale-105 transition-transform">
+            r
+          </div>
+          <span className="font-semibold text-base sm:text-lg text-on-surface tracking-tight">
+            Profile Viewer
           </span>
         </Link>
       </div>
 
-      {/* Quick Search in Header */}
-      <div className="hidden md:flex items-center flex-1 max-w-xs mx-md">
+      {/* Quick Search in Header (when not on homepage) */}
+      <div className="hidden md:flex items-center flex-1 max-w-sm mx-8">
         <form onSubmit={handleSearch} className="w-full relative">
-          <span className="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant pointer-events-none" data-icon="search">
+          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant pointer-events-none">
             search
           </span>
           <input
@@ -41,13 +41,13 @@ export function TopNavBar() {
             value={searchUser}
             onChange={(e) => setSearchUser(e.target.value)}
             placeholder="Search Reddit username..."
-            className="w-full bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/50 border border-outline rounded-sm py-[4px] pl-[30px] pr-sm text-code font-code text-[12px] focus:outline-none focus:border-secondary transition-colors"
+            className="w-full bg-surface-container text-on-surface placeholder:text-on-surface-variant/60 border border-outline/60 rounded-full py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
           />
         </form>
       </div>
 
-      {/* Utilities: Theme switcher, System status & Author avatar */}
-      <div className="flex items-center gap-sm">
+      {/* Theme Switcher & GitHub */}
+      <div className="flex items-center gap-3">
         <ThemeSelector />
 
         <Link
@@ -55,19 +55,10 @@ export function TopNavBar() {
           target="_blank"
           rel="noopener noreferrer"
           title="GitHub Repository"
-          className="p-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-sm transition-colors"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
         >
-          <span className="material-symbols-outlined text-[18px]" data-icon="code">
-            code
-          </span>
+          <span className="material-symbols-outlined text-[20px]">code</span>
         </Link>
-
-        {/* Researcher Indicator */}
-        <div className="w-7 h-7 rounded-full bg-surface-container-high border border-outline flex items-center justify-center text-primary font-label-caps text-[11px] overflow-hidden ml-xs">
-          <span className="material-symbols-outlined text-[18px]" data-icon="fingerprint">
-            fingerprint
-          </span>
-        </div>
       </div>
     </header>
   );

@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative flex items-center w-full">
         {icon && (
-          <span className="material-symbols-outlined absolute left-sm text-[18px] text-on-surface-variant pointer-events-none" data-icon={icon}>
+          <span className="material-symbols-outlined absolute left-3.5 text-[18px] text-on-surface-variant pointer-events-none">
             {icon}
           </span>
         )}
@@ -19,9 +19,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           className={clsx(
-            "w-full bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/60 border border-outline rounded-sm py-xs px-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors duration-150",
-            icon && "pl-[32px]",
-            isMonospace ? "font-code text-code" : "font-body-base text-body-base",
+            "w-full bg-surface text-on-surface placeholder:text-on-surface-variant/50 border border-outline/50 rounded-xl py-2 px-3.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-150",
+            icon && "pl-10",
+            isMonospace ? "font-mono text-xs" : "font-sans",
             className
           )}
           {...props}

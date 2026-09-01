@@ -19,11 +19,13 @@ export default function TimelinePage({ params }: { params: { username: string } 
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/profile/${encodeURIComponent(username)}/timeline?limit=100&sort=newest`);
+      const res = await fetch(
+        `/api/profile/${encodeURIComponent(username)}/timeline?limit=100&sort=newest`
+      );
       const json = await res.json();
 
       if (!res.ok || json.error) {
-        setError(json.error?.message || "Failed to load timeline events from archive.");
+        setError(json.error?.message || "Failed to load history from archive.");
       } else {
         setEvents(json.data || []);
       }
@@ -39,13 +41,13 @@ export default function TimelinePage({ params }: { params: { username: string } 
   }, [username]);
 
   if (loading) {
-    return <LoadingState message={`Constructing chronological activity timeline for u/${username}...`} />;
+    return <LoadingState message={`Constructing historical timeline for u/${username}...`} />;
   }
 
   if (error) {
     return (
       <ErrorState
-        title="Timeline Query Failed"
+        title="Could not load history"
         message={error}
         onRetry={fetchTimeline}
       />
@@ -55,55 +57,36 @@ export default function TimelinePage({ params }: { params: { username: string } 
   if (events.length === 0) {
     return (
       <EmptyState
-        title="No Timeline Records Found"
-        description={`No chronological activity events could be reconstructed for u/${username}.`}
-        actionLabel="RETRY"
+        title="No history found"
+        description={`No activity history could be found for u/${username}.`}
+        actionLabel="Retry"
         onAction={fetchTimeline}
       />
     );
   }
 
-  // Group timeline events by year
   const years = Array.from(new Set(events.map((e) => e.year))).sort((a, b) => b - a);
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md pb-xs border-b border-outline">
-        <div>
-          <h1 className="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[24px] text-secondary" data-icon="timeline">
-              timeline
-            </span>
-            <span>Historical Activity Timeline</span>
-          </h1>
-          <p className="font-code text-code text-on-surface-variant">
-            Target: u/{username} • Chronological stream of {events.length} submissions and comments
-          </p>
-        </div>
-      </div>
-
-      {/* Archival Coverage Notice */}
-      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
-        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
-        <span>Timeline reflects chronological order preserved in archive. Tie-breaking is deterministic on Reddit Fullname ID.</span>
-      </div>
-
+    <div className="space-y-8">
       {/* Timeline Stream */}
-      <div className="space-y-lg relative pl-6 md:pl-8 border-l border-outline ml-2 md:ml-4 mt-md">
+      <div className="space-y-10 relative pl-6 sm:pl-8 border-l border-outline/50 ml-3 sm:ml-4 pt-2">
         {years.map((year) => {
           const eventsInYear = events.filter((e) => e.year === year);
           return (
-            <div key={year} className="space-y-md relative">
-              {/* Year Anchor Node */}
-              <div className="absolute -left-[31px] md:-left-[39px] -top-1 flex items-center gap-xs">
-                <div className="w-4 h-4 rounded-full bg-secondary-container border-2 border-secondary" />
-                <span className="font-label-caps text-label-caps text-secondary font-bold bg-surface-container px-sm py-[2px] rounded-sm border border-outline">
+            <div key={year} className="space-y-4 relative">
+              {/* Year Badge Node */}
+              <div className="absolute -left-[37px] sm:-left-[45px] -top-2 flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-sm">
+                  <div className="w-2 h-2 rounded-full bg-white" />
+                </div>
+                <span className="text-xs font-bold text-primary bg-surface border border-outline/50 px-2.5 py-0.5 rounded-full shadow-xs">
                   {year}
                 </span>
               </div>
 
               {/* Events in this year */}
-              <div className="space-y-sm pt-6">
+              <div className="space-y-3 pt-6">
                 {eventsInYear.map((ev) => (
                   <Card
                     key={`${ev.type}_${ev.id}`}
@@ -111,35 +94,38 @@ export default function TimelinePage({ params }: { params: { username: string } 
                     density="normal"
                     hoverable
                     onClick={() => setSelectedEvent(ev)}
-                    className="space-y-xs relative"
+                    className="space-y-2 relative"
                   >
-                    {/* Node connector dot */}
-                    <div className="absolute -left-[31px] md:-left-[39px] top-4 w-2 h-2 rounded-full bg-outline-variant" />
+                    {/* Small Node Connector */}
+                    <div className="absolute -left-[35px] sm:-left-[43px] top-5 w-2 h-2 rounded-full bg-outline-variant" />
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-xs font-code text-code text-on-surface-variant">
-                        <span className="text-secondary font-medium">r/{ev.subreddit}</span>
+                    <div className="flex items-center justify-between text-xs text-on-surface-variant">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-primary">r/{ev.subreddit}</span>
                         <span>•</span>
-                        <span className="text-primary">{ev.redditId}</span>
+                        <span className="capitalize">{ev.type.toLowerCase()}</span>
                         <span>•</span>
                         <span>{ev.dateStr}</span>
-                        <span>•</span>
-                        <span className="text-primary uppercase text-[10px]">{ev.type}</span>
                       </div>
                       <StatusBadge status={ev.status} size="sm" />
                     </div>
 
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                    <h3 className="text-base font-semibold text-on-surface leading-snug">
                       {ev.title}
                     </h3>
 
-                    <p className="font-body-dense text-body-dense text-on-surface-variant">
-                      {ev.snippet}
-                    </p>
+                    {ev.snippet && (
+                      <p className="text-sm text-on-surface-variant line-clamp-2 leading-relaxed">
+                        {ev.snippet}
+                      </p>
+                    )}
 
-                    <div className="flex items-center justify-between pt-xs border-t border-outline/40 font-code text-code text-on-surface-variant text-[12px]">
-                      <span>Score: {ev.score}</span>
-                      <span className="font-label-caps text-label-caps text-secondary">INSPECT PROVENANCE →</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-outline/30 text-xs text-on-surface-variant">
+                      <span className="font-medium text-on-surface">{ev.score} upvotes</span>
+                      <span className="text-primary font-medium flex items-center gap-1">
+                        <span>View details</span>
+                        <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                      </span>
                     </div>
                   </Card>
                 ))}
@@ -173,6 +159,6 @@ export default function TimelinePage({ params }: { params: { username: string } 
           ]}
         />
       )}
-    </>
+    </div>
   );
 }

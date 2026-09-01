@@ -4,9 +4,6 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { MediaStatusBadge } from "@/components/ui/MediaStatusBadge";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { Button } from "@/components/ui/Button";
 import { LoadingState, EmptyState, ErrorState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
 import { PostItem } from "@/types";
@@ -64,86 +61,68 @@ export default function PostsFeedPage({ params }: { params: { username: string }
   };
 
   return (
-    <>
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md pb-xs border-b border-outline">
-        <div>
-          <h1 className="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[24px] text-secondary" data-icon="article">
-              article
-            </span>
-            <span>Historical Posts Feed</span>
-          </h1>
-          <p className="font-code text-code text-on-surface-variant">
-            Target: u/{username} • Showing {posts.length} records (Page {page})
-          </p>
+    <div className="space-y-6">
+      {/* Clean Filter Bar */}
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex flex-col sm:flex-row items-center gap-3 bg-surface-container/60 p-2 sm:p-2.5 rounded-2xl border border-outline/40"
+      >
+        <div className="relative flex-1 w-full">
+          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant pointer-events-none">
+            search
+          </span>
+          <input
+            type="text"
+            placeholder="Search posts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-surface text-on-surface placeholder:text-on-surface-variant/50 border border-outline/50 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary transition-colors"
+          />
         </div>
-      </div>
 
-      {/* Archival Coverage Notice */}
-      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
-        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
-        <span>Archive coverage is historical. Records reflect snapshots preserved at time of ingestion.</span>
-      </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface text-on-surface border border-outline/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors flex-1 sm:flex-none cursor-pointer"
+          >
+            <option value="ALL">All content</option>
+            <option value="VISIBLE">Visible only</option>
+            <option value="DELETED">Deleted only</option>
+            <option value="REMOVED">Removed only</option>
+            <option value="EDITED">Edited only</option>
+            <option value="DELETED_LATER">Deleted later</option>
+          </select>
 
-      {/* Filter & Search Toolbar */}
-      <Card level={1} density="compact">
-        <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center gap-sm">
-          <div className="flex-1 w-full">
-            <Input
-              icon="search"
-              placeholder="Search keywords in title or selftext..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          <select
+            value={sortOption}
+            onChange={(e) => {
+              setSortOption(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface text-on-surface border border-outline/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors flex-1 sm:flex-none cursor-pointer"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="score">Highest score</option>
+            <option value="comments">Most comments</option>
+          </select>
+        </div>
+      </form>
 
-          <div className="flex items-center gap-sm w-full md:w-auto">
-            <Select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="ALL">All Statuses</option>
-              <option value="VISIBLE">Visible Only</option>
-              <option value="DELETED">Deleted Only</option>
-              <option value="REMOVED">Removed Only</option>
-              <option value="EDITED">Edited Only</option>
-              <option value="DELETED_LATER">Deleted Later</option>
-            </Select>
-
-            <Select
-              value={sortOption}
-              onChange={(e) => {
-                setSortOption(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="newest">Sort: Newest</option>
-              <option value="oldest">Sort: Oldest</option>
-              <option value="score">Sort: Score</option>
-              <option value="comments">Sort: Comments</option>
-            </Select>
-
-            <Button type="submit" variant="secondary" size="md">
-              FILTER
-            </Button>
-          </div>
-        </form>
-      </Card>
-
-      {/* Posts List or State Displays */}
+      {/* Posts List */}
       {loading ? (
-        <LoadingState message={`Retrieving posts feed for u/${username}...`} />
+        <LoadingState message={`Loading posts for u/${username}...`} />
       ) : error ? (
-        <ErrorState title="Posts Feed Query Failed" message={error} onRetry={fetchPosts} />
+        <ErrorState title="Could not load posts" message={error} onRetry={fetchPosts} />
       ) : posts.length === 0 ? (
         <EmptyState
-          title="No Historical Submissions Found"
-          description={`No posts matching the selected filters were found for u/${username}.`}
-          actionLabel="RESET FILTERS"
+          title="No posts found"
+          description={`No submissions matched the selected filters for u/${username}.`}
+          actionLabel="Reset filters"
           onAction={() => {
             setStatusFilter("ALL");
             setSearchQuery("");
@@ -152,83 +131,104 @@ export default function PostsFeedPage({ params }: { params: { username: string }
           }}
         />
       ) : (
-        <div className="space-y-sm">
-          {posts.map((post) => (
-            <Card
-              key={post.id}
-              level={1}
-              density="normal"
-              hoverable
-              onClick={() => setSelectedPost(post)}
-              className="space-y-xs"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-xs font-code text-code text-on-surface-variant">
-                  <span className="text-secondary font-medium">r/{post.subreddit || post.subredditName}</span>
-                  <span>•</span>
-                  <span className="text-primary">{post.redditId}</span>
-                  <span>•</span>
-                  <span>{new Date(post.createdUtc).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center gap-xs">
-                  {post.mediaStatus && post.mediaStatus !== "MEDIA_UNAVAILABLE" && (
-                    <MediaStatusBadge status={post.mediaStatus} size="sm" />
-                  )}
-                  <StatusBadge status={post.status} size="sm" />
-                </div>
-              </div>
+        <div className="space-y-4">
+          {posts.map((post) => {
+            const hasMedia = post.url && (post.url.endsWith(".jpg") || post.url.endsWith(".png") || post.url.endsWith(".webp") || post.url.includes("i.redd.it") || post.url.includes("imgur"));
 
-              <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                {post.title}
-              </h3>
-
-              {post.selftext && (
-                <p className="font-body-dense text-body-dense text-on-surface-variant line-clamp-2">
-                  {post.selftext}
-                </p>
-              )}
-
-              <div className="flex items-center justify-between pt-xs border-t border-outline/40 font-code text-code text-on-surface-variant">
-                <div className="flex items-center gap-md">
-                  <span className="flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-[14px]" data-icon="thumb_up">
-                      thumb_up
+            return (
+              <Card
+                key={post.id}
+                level={1}
+                density="normal"
+                hoverable
+                onClick={() => setSelectedPost(post)}
+                className="space-y-3"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between text-xs text-on-surface-variant">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-primary">
+                      r/{post.subreddit || post.subredditName}
                     </span>
-                    {post.score}
-                  </span>
-                  <span className="flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-[14px]" data-icon="forum">
-                      forum
+                    <span>•</span>
+                    <span>{new Date(post.createdUtc).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {post.mediaStatus && post.mediaStatus !== "MEDIA_UNAVAILABLE" && (
+                      <MediaStatusBadge status={post.mediaStatus} size="sm" />
+                    )}
+                    <StatusBadge status={post.status} size="sm" />
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-base sm:text-lg font-semibold text-on-surface leading-snug">
+                  {post.title}
+                </h3>
+
+                {/* Body Snippet */}
+                {post.selftext && (
+                  <p className="text-sm text-on-surface-variant line-clamp-3 leading-relaxed">
+                    {post.selftext}
+                  </p>
+                )}
+
+                {/* Media Preview if available */}
+                {hasMedia && (
+                  <div className="rounded-xl overflow-hidden max-h-72 bg-surface-container border border-outline/40 flex items-center justify-center my-2">
+                    <img
+                      src={post.url}
+                      alt={post.title}
+                      className="max-h-72 w-auto max-w-full object-contain rounded-lg"
+                    />
+                  </div>
+                )}
+
+                {/* Stats Bar */}
+                <div className="flex items-center justify-between pt-2 border-t border-outline/30 text-xs text-on-surface-variant">
+                  <div className="flex items-center gap-4 font-medium">
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[15px] text-primary">
+                        arrow_upward
+                      </span>
+                      {post.score}
                     </span>
-                    {post.numComments}
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[15px]">
+                        chat_bubble
+                      </span>
+                      {post.numComments}
+                    </span>
+                  </div>
+
+                  <span className="text-xs text-primary font-medium flex items-center gap-1">
+                    <span>View full post</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                   </span>
                 </div>
-                <span className="font-label-caps text-label-caps text-secondary">INSPECT PROVENANCE →</span>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
 
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-between pt-md">
-            <Button
-              variant="outline"
-              size="sm"
+          {/* Clean Pagination */}
+          <div className="flex items-center justify-between pt-4 text-sm">
+            <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="px-4 py-2 rounded-full border border-outline/50 bg-surface-container hover:bg-surface-container-high text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              ← PREVIOUS PAGE
-            </Button>
-            <span className="font-code text-code text-on-surface-variant">
+              Previous
+            </button>
+            <span className="text-xs text-on-surface-variant font-medium">
               Page {page}
             </span>
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               disabled={!hasMore}
               onClick={() => setPage((p) => p + 1)}
+              className="px-4 py-2 rounded-full border border-outline/50 bg-surface-container hover:bg-surface-container-high text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              NEXT PAGE →
-            </Button>
+              Next
+            </button>
           </div>
         </div>
       )}
@@ -262,6 +262,6 @@ export default function PostsFeedPage({ params }: { params: { username: string }
           ]}
         />
       )}
-    </>
+    </div>
   );
 }

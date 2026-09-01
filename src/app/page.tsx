@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Image from "next/image";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 
 export default function HomePage() {
   const router = useRouter();
@@ -13,114 +12,115 @@ export default function HomePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
-      router.push(`/u/${encodeURIComponent(username.trim().replace(/^u\//, ""))}`);
+      router.push(`/u/${encodeURIComponent(username.trim().replace(/^u\//i, ""))}`);
     }
   };
 
-  const sampleUsers = ["Speeder", "spez", "kn0thing", "automoderator"];
+  const handleQuickLookup = (name: string) => {
+    router.push(`/u/${encodeURIComponent(name)}`);
+  };
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center p-margin-mobile md:p-margin-desktop max-w-[1000px] mx-auto w-full py-xl">
-      {/* Hero Badge */}
-      <div className="flex items-center gap-xs px-sm py-[2px] bg-surface-container border border-outline rounded-full text-label-caps font-label-caps text-primary mb-lg">
-        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        <span>HISTORICAL REDDIT PROFILE RESEARCH WORKBENCH</span>
+    <main className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 max-w-5xl mx-auto w-full py-12 sm:py-20 relative">
+      {/* Top Right Mascot */}
+      <div className="absolute top-2 right-4 sm:top-4 sm:right-8 md:right-12 pointer-events-none select-none z-10">
+        <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 transition-transform duration-300 hover:scale-105">
+          <Image
+            src="/mascot.png"
+            alt="Reddit Profile Mascot"
+            width={160}
+            height={160}
+            priority
+            className="w-full h-full object-contain drop-shadow-md"
+          />
+        </div>
       </div>
 
-      {/* Terminal Title */}
-      <h1 className="font-display-lg text-display-lg text-on-background text-center mb-xs tracking-tight">
-        Reddit Hidden Profile Viewer
-      </h1>
-      <p className="font-body-base text-body-base text-on-surface-variant text-center max-w-xl mb-xl">
-        Reconstruct removed submissions, deleted comment context, timeline evolution, and evidence-backed AI profile summaries.
-      </p>
+      {/* Hero Section */}
+      <div className="text-center max-w-2xl mx-auto space-y-4 pt-6 sm:pt-10">
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-on-surface">
+          Look up a Reddit profile
+        </h1>
+        <p className="text-base sm:text-lg text-on-surface-variant leading-relaxed">
+          Enter a username and get a clean profile page with its posts, comments and history —
+          including content that has since disappeared.
+        </p>
+      </div>
 
-      {/* Primary Search Console */}
-      <Card level={1} density="spacious" className="w-full max-w-xl mb-xl border-outline-variant">
-        <form onSubmit={handleSearch} className="space-y-md">
-          <div className="flex items-center justify-between font-label-caps text-label-caps text-on-surface-variant">
-            <span>TARGET USERNAME LOOKUP</span>
-            <span className="text-secondary font-code text-[11px]">STATUS: READY</span>
+      {/* Search Bar Container */}
+      <div className="w-full max-w-xl mx-auto mt-8 mb-16 space-y-3">
+        <form
+          onSubmit={handleSearch}
+          className="relative flex items-center bg-surface border border-outline rounded-full p-1.5 shadow-card hover:border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-200"
+        >
+          <div className="pl-4 text-on-surface-variant flex items-center pointer-events-none">
+            <span className="material-symbols-outlined text-[22px]">search</span>
           </div>
 
-          <div className="relative flex items-center">
-            <span className="absolute left-md font-code text-code text-primary font-bold">
-              u/
-            </span>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="enter username..."
-              autoFocus
-              className="w-full bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40 border border-outline rounded-sm py-sm pl-10 pr-[100px] font-code text-code text-[14px] focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors"
-            />
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              className="absolute right-[4px]"
-              disabled={!username.trim()}
-            >
-              INVESTIGATE
-            </Button>
-          </div>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="username"
+            autoFocus
+            className="w-full bg-transparent text-on-surface placeholder:text-on-surface-variant/50 px-3 py-2 text-base focus:outline-none border-none ring-0"
+          />
 
-          {/* Quick Demo Links */}
-          <div className="flex flex-wrap items-center gap-xs pt-xs font-code text-code text-[12px] text-on-surface-variant">
-            <span>Try sample profiles:</span>
-            {sampleUsers.map((u) => (
-              <button
-                key={u}
-                type="button"
-                onClick={() => router.push(`/u/${u}`)}
-                className="px-xs py-[2px] bg-surface-container-high hover:bg-surface-container-highest text-secondary border border-outline rounded-sm transition-colors"
-              >
-                u/{u}
-              </button>
-            ))}
-          </div>
+          <button
+            type="submit"
+            disabled={!username.trim()}
+            className="bg-primary hover:bg-primary-container text-white font-medium px-6 py-2.5 rounded-full text-sm shadow-sm transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            View
+          </button>
         </form>
-      </Card>
 
-      {/* Forensic Capabilities Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-md w-full max-w-4xl">
-        <Card level={0} density="normal" className="space-y-xs">
-          <div className="flex items-center gap-xs text-secondary font-label-caps text-label-caps">
-            <span className="material-symbols-outlined text-[18px]" data-icon="history_toggle_off">
-              history_toggle_off
-            </span>
-            <span>PHASE 1: PROVENANCE</span>
+        {/* Quick link */}
+        <div className="flex items-center justify-center gap-1.5 text-xs text-on-surface-variant">
+          <span>Try</span>
+          <button
+            type="button"
+            onClick={() => handleQuickLookup("mossyroute")}
+            className="text-primary hover:underline font-medium"
+          >
+            u/mossyroute
+          </button>
+        </div>
+      </div>
+
+      {/* 3 Feature Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mx-auto">
+        {/* Card 1: Full history */}
+        <Card level={1} density="normal" className="space-y-3">
+          <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+            <span className="material-symbols-outlined text-[22px]">schedule</span>
           </div>
-          <h3 className="font-headline-sm text-headline-sm text-on-surface">Historical Reconstruction</h3>
-          <p className="font-body-dense text-body-dense text-on-surface-variant">
-            Inspect original post bodies, detect moderator removals vs. author deletions, and view revision diffs.
+          <h3 className="text-base font-semibold text-on-surface">Full history</h3>
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            Posts and comments grouped by year and month, including ones that no longer show on the
+            profile.
           </p>
         </Card>
 
-        <Card level={0} density="normal" className="space-y-xs">
-          <div className="flex items-center gap-xs text-primary font-label-caps text-label-caps">
-            <span className="material-symbols-outlined text-[18px]" data-icon="auto_awesome">
-              auto_awesome
-            </span>
-            <span>PHASE 2: AI SUMMARY</span>
+        {/* Card 2: Media, properly sized */}
+        <Card level={1} density="normal" className="space-y-3">
+          <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+            <span className="material-symbols-outlined text-[22px]">image</span>
           </div>
-          <h3 className="font-headline-sm text-headline-sm text-on-surface">30 Grounded Insights</h3>
-          <p className="font-body-dense text-body-dense text-on-surface-variant">
-            Deterministic behavioral profiling strictly backed by citations and explicit vs. inference classification.
+          <h3 className="text-base font-semibold text-on-surface">Media, properly sized</h3>
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            Image posts get a large preview and a clean lightbox instead of a thumbnail.
           </p>
         </Card>
 
-        <Card level={0} density="normal" className="space-y-xs">
-          <div className="flex items-center gap-xs text-[#3fb950] font-label-caps text-label-caps">
-            <span className="material-symbols-outlined text-[18px]" data-icon="terminal">
-              terminal
-            </span>
-            <span>FORENSIC SYSTEM</span>
+        {/* Card 3: Simple insights */}
+        <Card level={1} density="normal" className="space-y-3">
+          <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+            <span className="material-symbols-outlined text-[22px]">auto_awesome</span>
           </div>
-          <h3 className="font-headline-sm text-headline-sm text-on-surface">Triple Theme Engine</h3>
-          <p className="font-body-dense text-body-dense text-on-surface-variant">
-            Engineered for researchers with Dark mode, AMOLED pure black, and Archival Light mode.
+          <h3 className="text-base font-semibold text-on-surface">Simple insights</h3>
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            Thirty short, readable findings about how someone uses Reddit — each with evidence.
           </p>
         </Card>
       </div>

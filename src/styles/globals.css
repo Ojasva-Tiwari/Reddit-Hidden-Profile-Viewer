@@ -3,165 +3,178 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   STITCH FORENSIC ARCHIVE DESIGN TOKENS (CSS VARIABLES)
+   LOVABLE MODERN THEME SYSTEM
    ========================================================================== */
 
 :root,
 .dark {
-  --background: #121212;
-  --on-background: #e5e2e1;
-  --surface: #131313;
-  --surface-dim: #131313;
-  --surface-bright: #393939;
-  --surface-variant: #353534;
-  --surface-container-lowest: #0e0e0e;
-  --surface-container-low: #1c1b1b;
-  --surface-container: #201f1f;
-  --surface-container-high: #2a2a2a;
-  --surface-container-highest: #353534;
-  --on-surface: #e5e2e1;
-  --on-surface-variant: #ddc0b6;
-  --inverse-surface: #e5e2e1;
-  --inverse-on-surface: #313030;
-  --outline: #30363d;
-  --outline-variant: #57423a;
-  --primary: #ffb598;
-  --on-primary: #591d00;
-  --primary-container: #e2703e;
-  --on-primary-container: #4e1800;
-  --inverse-primary: #a04010;
-  --secondary: #aac7ff;
-  --on-secondary: #002f65;
-  --secondary-container: #0072e3;
-  --on-secondary-container: #fefcff;
-  --tertiary: #bec7d2;
-  --on-tertiary: #29313a;
-  --tertiary-container: #89929c;
-  --on-tertiary-container: #222b33;
-  --error: #ffb4ab;
-  --on-error: #690005;
-  --error-container: #93000a;
-  --on-error-container: #ffdad6;
+  --background: #141416;
+  --on-background: #f4f4f5;
+  --surface: #1a1a1e;
+  --surface-dim: #141416;
+  --surface-bright: #2c2c32;
+  --surface-variant: #26262b;
+  --surface-container-lowest: #0e0e10;
+  --surface-container-low: #1e1e22;
+  --surface-container: #222226;
+  --surface-container-high: #2a2a30;
+  --surface-container-highest: #323238;
+  --on-surface: #f4f4f5;
+  --on-surface-variant: #a1a1aa;
+  --inverse-surface: #f4f4f5;
+  --inverse-on-surface: #18181b;
+  --outline: #2e2e34;
+  --outline-variant: #3f3f46;
+  
+  /* Brand Warm Terracotta Accent */
+  --primary: #d95b30;
+  --on-primary: #ffffff;
+  --primary-container: #c85a32;
+  --on-primary-container: #ffffff;
+  --inverse-primary: #e07048;
+  
+  --secondary: #3b82f6;
+  --on-secondary: #ffffff;
+  --secondary-container: #1e3a8a;
+  --on-secondary-container: #dbeafe;
+  
+  --tertiary: #a1a1aa;
+  --on-tertiary: #18181b;
+  --tertiary-container: #27272a;
+  --on-tertiary-container: #e4e4e7;
+  
+  --error: #ef4444;
+  --on-error: #ffffff;
+  --error-container: #7f1d1d;
+  --on-error-container: #fecaca;
 
   /* Semantic status colors */
-  --status-visible: #3fb950;
-  --status-visible-bg: rgba(63, 185, 80, 0.15);
-  --status-deleted: #ffb4ab;
-  --status-deleted-bg: rgba(248, 81, 73, 0.15);
-  --status-removed: #d29922;
-  --status-removed-bg: rgba(210, 153, 34, 0.15);
-  --status-edited: #58a6ff;
-  --status-edited-bg: rgba(88, 166, 255, 0.15);
-  --status-speculative: #bec7d2;
-  --status-speculative-bg: rgba(190, 199, 210, 0.15);
+  --status-visible: #22c55e;
+  --status-visible-bg: rgba(34, 197, 94, 0.12);
+  --status-deleted: #ef4444;
+  --status-deleted-bg: rgba(239, 68, 68, 0.12);
+  --status-removed: #f59e0b;
+  --status-removed-bg: rgba(245, 158, 11, 0.12);
+  --status-edited: #3b82f6;
+  --status-edited-bg: rgba(59, 130, 246, 0.12);
+  --status-speculative: #a1a1aa;
+  --status-speculative-bg: rgba(161, 161, 170, 0.12);
 }
 
 .amoled {
   --background: #000000;
-  --on-background: #e5e2e1;
-  --surface: #050505;
+  --on-background: #ffffff;
+  --surface: #0a0a0c;
   --surface-dim: #000000;
-  --surface-bright: #252525;
-  --surface-variant: #222222;
+  --surface-bright: #1c1c20;
+  --surface-variant: #18181c;
   --surface-container-lowest: #000000;
-  --surface-container-low: #0a0a0a;
-  --surface-container: #111111;
-  --surface-container-high: #1c1c1c;
-  --surface-container-highest: #262626;
-  --on-surface: #e5e2e1;
-  --on-surface-variant: #9b9a99;
+  --surface-container-low: #0c0c0e;
+  --surface-container: #121216;
+  --surface-container-high: #1a1a20;
+  --surface-container-highest: #222228;
+  --on-surface: #ffffff;
+  --on-surface-variant: #8e8e93;
   --inverse-surface: #ffffff;
-  --inverse-on-surface: #111111;
-  --outline: #22262c;
-  --outline-variant: #3a322e;
-  --primary: #ffb598;
-  --on-primary: #591d00;
-  --primary-container: #d96a38;
+  --inverse-on-surface: #000000;
+  --outline: #1c1c20;
+  --outline-variant: #2c2c32;
+  
+  --primary: #d95b30;
+  --on-primary: #ffffff;
+  --primary-container: #c85a32;
   --on-primary-container: #ffffff;
-  --inverse-primary: #a04010;
-  --secondary: #8cb4ff;
-  --on-secondary: #00224d;
-  --secondary-container: #005bb7;
-  --on-secondary-container: #ffffff;
-  --tertiary: #bec7d2;
-  --on-tertiary: #29313a;
-  --tertiary-container: #89929c;
-  --on-tertiary-container: #222b33;
-  --error: #ff7b72;
-  --on-error: #590004;
-  --error-container: #7a0008;
-  --on-error-container: #ffdad6;
+  --inverse-primary: #e07048;
+  
+  --secondary: #3b82f6;
+  --on-secondary: #ffffff;
+  --secondary-container: #1e3a8a;
+  --on-secondary-container: #dbeafe;
+  
+  --tertiary: #8e8e93;
+  --on-tertiary: #000000;
+  --tertiary-container: #1c1c20;
+  --on-tertiary-container: #ffffff;
+  
+  --error: #ef4444;
+  --on-error: #ffffff;
+  --error-container: #7f1d1d;
+  --on-error-container: #fecaca;
 
   /* Semantic status colors */
-  --status-visible: #2ea043;
-  --status-visible-bg: rgba(46, 160, 67, 0.18);
-  --status-deleted: #f85149;
-  --status-deleted-bg: rgba(248, 81, 73, 0.18);
-  --status-removed: #d29922;
-  --status-removed-bg: rgba(210, 153, 34, 0.18);
-  --status-edited: #388bfd;
-  --status-edited-bg: rgba(56, 139, 253, 0.18);
-  --status-speculative: #bec7d2;
-  --status-speculative-bg: rgba(190, 199, 210, 0.18);
+  --status-visible: #22c55e;
+  --status-visible-bg: rgba(34, 197, 94, 0.15);
+  --status-deleted: #ef4444;
+  --status-deleted-bg: rgba(239, 68, 68, 0.15);
+  --status-removed: #f59e0b;
+  --status-removed-bg: rgba(245, 158, 11, 0.15);
+  --status-edited: #3b82f6;
+  --status-edited-bg: rgba(59, 130, 246, 0.15);
+  --status-speculative: #8e8e93;
+  --status-speculative-bg: rgba(142, 142, 147, 0.15);
 }
 
 .light {
-  --background: #f5f5f5;
-  --on-background: #1f2328;
+  --background: #fbfbfb;
+  --on-background: #18181b;
   --surface: #ffffff;
-  --surface-dim: #f0f0f0;
+  --surface-dim: #f4f4f5;
   --surface-bright: #ffffff;
-  --surface-variant: #e8e8e8;
+  --surface-variant: #f4f4f5;
   --surface-container-lowest: #ffffff;
-  --surface-container-low: #f8f9fa;
-  --surface-container: #f1f3f5;
-  --surface-container-high: #e9ecef;
-  --surface-container-highest: #dee2e6;
-  --on-surface: #1f2328;
-  --on-surface-variant: #57606a;
-  --inverse-surface: #24292f;
-  --inverse-on-surface: #f6f8fa;
-  --outline: #d1d5da;
-  --outline-variant: #c4c7c5;
-  --primary: #c25325;
+  --surface-container-low: #ffffff;
+  --surface-container: #f4f4f5;
+  --surface-container-high: #e4e4e7;
+  --surface-container-highest: #d4d4d8;
+  --on-surface: #18181b;
+  --on-surface-variant: #71717a;
+  --inverse-surface: #18181b;
+  --inverse-on-surface: #fafafa;
+  --outline: #eaeaea;
+  --outline-variant: #e4e4e7;
+  
+  --primary: #c85a32;
   --on-primary: #ffffff;
-  --primary-container: #d96a38;
+  --primary-container: #d95b30;
   --on-primary-container: #ffffff;
-  --inverse-primary: #ffb598;
-  --secondary: #0969da;
+  --inverse-primary: #e07048;
+  
+  --secondary: #2563eb;
   --on-secondary: #ffffff;
-  --secondary-container: #ddf4ff;
-  --on-secondary-container: #0969da;
-  --tertiary: #57606a;
+  --secondary-container: #eff6ff;
+  --on-secondary-container: #1d4ed8;
+  
+  --tertiary: #71717a;
   --on-tertiary: #ffffff;
-  --tertiary-container: #eaeef2;
-  --on-tertiary-container: #24292f;
-  --error: #cf222e;
+  --tertiary-container: #f4f4f5;
+  --on-tertiary-container: #18181b;
+  
+  --error: #dc2626;
   --on-error: #ffffff;
-  --error-container: #ffebe9;
-  --on-error-container: #82071e;
+  --error-container: #fee2e2;
+  --on-error-container: #991b1b;
 
   /* Semantic status colors */
-  --status-visible: #1a7f37;
-  --status-visible-bg: #dafbe1;
-  --status-deleted: #cf222e;
-  --status-deleted-bg: #ffebe9;
-  --status-removed: #9a6700;
-  --status-removed-bg: #fff8c5;
-  --status-edited: #0969da;
-  --status-edited-bg: #ddf4ff;
-  --status-speculative: #57606a;
-  --status-speculative-bg: #eaeef2;
+  --status-visible: #16a34a;
+  --status-visible-bg: #dcfce7;
+  --status-deleted: #dc2626;
+  --status-deleted-bg: #fee2e2;
+  --status-removed: #d97706;
+  --status-removed-bg: #fef3c7;
+  --status-edited: #2563eb;
+  --status-edited-bg: #eff6ff;
+  --status-speculative: #71717a;
+  --status-speculative-bg: #f4f4f5;
 }
 
 /* ==========================================================================
-   GLOBAL RESET & TYPOGRAPHY
+   GLOBAL RESET & APPROACHABLE TYPOGRAPHY
    ========================================================================== */
 
 body {
   background-color: var(--background);
   color: var(--on-background);
-  font-family: var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -188,21 +201,21 @@ body {
   vertical-align: middle;
 }
 
-/* Custom terminal scrollbars */
+/* Modern smooth rounded scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--surface-container-lowest);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--surface-container-highest);
-  border-radius: 2px;
+  background: var(--outline-variant);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--outline-variant);
+  background: var(--on-surface-variant);
 }

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { MediaStatus } from "@/types";
 import { MediaStatusBadge } from "./MediaStatusBadge";
 
@@ -23,87 +25,122 @@ export function MediaReferenceViewer({
   thumbnailUrl,
   references = [],
 }: MediaReferenceViewerProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
   const primaryRef = references[0];
   const activeUrl = primaryRef?.mediaUrl || mediaUrl;
   const activeThumb = primaryRef?.thumbnailUrl || thumbnailUrl;
   const activeStatus = primaryRef?.status || mediaStatus;
 
-  return (
-    <div className="space-y-xs">
-      <div className="flex items-center justify-between">
-        <h4 className="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs">
-          <span className="material-symbols-outlined text-[16px] text-secondary" data-icon="perm_media">
-            perm_media
-          </span>
-          <span>ATTACHED MEDIA & REFERENCES</span>
-        </h4>
-        <MediaStatusBadge status={activeStatus} size="sm" />
-      </div>
+  if (activeStatus === "MEDIA_UNAVAILABLE" && !activeUrl && !activeThumb) {
+    return null;
+  }
 
-      <div className="p-md bg-surface-container-lowest border border-outline rounded-sm font-code text-code text-[12px]">
-        {activeStatus === "MEDIA_AVAILABLE" && (activeUrl || activeThumb) ? (
-          <div className="space-y-sm">
-            <div className="relative max-h-80 overflow-hidden rounded-sm border border-outline bg-[#000000] flex items-center justify-center">
-              <img
-                src={activeUrl || activeThumb || ""}
-                alt="Archived Media Content"
-                className="max-h-80 w-auto object-contain"
-              />
+  const imageSrc = activeUrl || activeThumb;
+
+  return (
+    <div className="space-y-2 mt-3">
+      {activeStatus === "MEDIA_AVAILABLE" && imageSrc ? (
+        <div className="space-y-2">
+          {/* Large Image Preview Card */}
+          <div
+            onClick={() => setLightboxOpen(true)}
+            className="group relative max-h-96 w-full overflow-hidden rounded-2xl border border-outline/50 bg-surface-container flex items-center justify-center cursor-zoom-in transition-all duration-200 hover:border-outline"
+          >
+            <img
+              src={imageSrc}
+              alt="Media Preview"
+              className="max-h-96 w-auto max-w-full object-contain rounded-xl transition-transform duration-200 group-hover:scale-[1.01]"
+            />
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium shadow-md">
+                <span className="material-symbols-outlined text-[16px]">fullscreen</span>
+                Click to expand
+              </span>
             </div>
-            <div className="flex items-center justify-between text-on-surface-variant text-[11px]">
-              <span>Type: {primaryRef?.mediaType || "IMAGE/PREVIEW"}</span>
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-on-surface-variant px-1">
+            <MediaStatusBadge status={activeStatus} size="sm" />
+            {activeUrl && (
               <a
-                href={activeUrl || "#"}
+                href={activeUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="text-secondary hover:underline flex items-center gap-[2px]"
+                className="hover:text-primary transition-colors flex items-center gap-1"
               >
-                <span>OPEN DIRECT SOURCE</span>
-                <span className="material-symbols-outlined text-[12px]">open_in_new</span>
+                <span>Original link</span>
+                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
               </a>
-            </div>
-          </div>
-        ) : activeStatus === "THUMBNAIL_AVAILABLE" && activeThumb ? (
-          <div className="flex items-start gap-md">
-            <img
-              src={activeThumb}
-              alt="Archived Thumbnail"
-              className="w-24 h-24 object-cover rounded-sm border border-outline bg-surface-container flex-shrink-0"
-            />
-            <div className="space-y-xs flex-1">
-              <span className="text-secondary font-semibold block">Thumbnail Preserved in Archive</span>
-              <p className="font-body-dense text-[12px] text-on-surface-variant">
-                The original full-resolution media was not captured during ingestion, but a low-resolution thumbnail was preserved in upstream metadata.
-              </p>
-              {activeUrl && (
-                <div className="text-[11px] text-on-surface-variant truncate max-w-md">
-                  Original Reference: <span className="text-primary">{activeUrl}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : activeStatus === "MEDIA_REFERENCE_ONLY" ? (
-          <div className="space-y-xs">
-            <div className="flex items-center gap-xs text-[#58a6ff]">
-              <span className="material-symbols-outlined text-[16px]">link</span>
-              <span className="font-semibold">External Media Reference Detected</span>
-            </div>
-            <p className="font-body-dense text-[12px] text-on-surface-variant">
-              The original submission referenced an external URL, but raw media files are not mirrored or stored in this historical archive database.
-            </p>
-            {activeUrl && (
-              <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm truncate text-on-surface">
-                Target URL: <span className="text-primary">{activeUrl}</span>
-              </div>
             )}
           </div>
-        ) : (
-          <div className="text-on-surface-variant/70 italic flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[16px]">hide_image</span>
-            <span>No media attachments or external media references associated with this record.</span>
+        </div>
+      ) : activeStatus === "THUMBNAIL_AVAILABLE" && activeThumb ? (
+        <div className="flex items-center gap-4 p-3 bg-surface-container rounded-2xl border border-outline/40">
+          <img
+            src={activeThumb}
+            alt="Thumbnail"
+            onClick={() => setLightboxOpen(true)}
+            className="w-20 h-20 object-cover rounded-xl border border-outline/40 bg-surface cursor-zoom-in flex-shrink-0"
+          />
+          <div className="space-y-1 flex-1 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-on-surface">Archived Thumbnail</span>
+              <MediaStatusBadge status={activeStatus} size="sm" />
+            </div>
+            <p className="text-xs text-on-surface-variant">
+              Low-resolution thumbnail preserved in archive.
+            </p>
+            {activeUrl && (
+              <a
+                href={activeUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+              >
+                <span>Source link</span>
+                <span className="material-symbols-outlined text-[12px]">open_in_new</span>
+              </a>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      ) : activeStatus === "MEDIA_REFERENCE_ONLY" && activeUrl ? (
+        <div className="p-3.5 bg-surface-container rounded-2xl border border-outline/40 text-sm space-y-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-on-surface font-medium">
+              <span className="material-symbols-outlined text-[18px] text-primary">link</span>
+              <span>External Media Link</span>
+            </div>
+            <MediaStatusBadge status={activeStatus} size="sm" />
+          </div>
+          <p className="text-xs text-on-surface-variant">
+            Referenced external host: <span className="font-mono text-on-surface">{activeUrl}</span>
+          </p>
+        </div>
+      ) : null}
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && imageSrc && (
+        <div
+          onClick={() => setLightboxOpen(false)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
+        >
+          <div className="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+            <img
+              src={imageSrc}
+              alt="Fullscreen Preview"
+              className="max-h-[85vh] max-w-full object-contain rounded-2xl shadow-2xl"
+            />
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute -top-12 right-0 text-white/80 hover:text-white flex items-center gap-1 text-sm bg-white/10 hover:bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full"
+            >
+              <span className="material-symbols-outlined text-[18px]">close</span>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -23,38 +23,38 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className, size = "md" }: StatusBadgeProps) {
-  const normalized = status.toUpperCase();
+  const normalized = (status || "VISIBLE").toUpperCase();
 
   const getStatusStyles = () => {
     switch (normalized) {
       case "VISIBLE":
-        return "text-[#3fb950] bg-[#3fb950]/15 border-[#3fb950]/30";
+        return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
       case "DELETED":
-        return "text-[#ffb4ab] bg-[#ffb4ab]/15 border-[#ffb4ab]/30";
+        return "text-rose-500 bg-rose-500/10 border-rose-500/20";
       case "REMOVED":
-        return "text-[#d29922] bg-[#d29922]/15 border-[#d29922]/30";
+        return "text-amber-500 bg-amber-500/10 border-amber-500/20";
       case "EDITED":
-        return "text-[#58a6ff] bg-[#58a6ff]/15 border-[#58a6ff]/30";
+        return "text-blue-500 bg-blue-500/10 border-blue-500/20";
       case "DELETED_LATER":
-        return "text-[#ff7b72] bg-[#ff7b72]/15 border-[#ff7b72]/30";
+        return "text-orange-500 bg-orange-500/10 border-orange-500/20";
       case "INITIALLY_UNAVAILABLE":
       default:
-        return "text-[#bec7d2] bg-[#bec7d2]/15 border-[#bec7d2]/30";
+        return "text-zinc-400 bg-zinc-500/10 border-zinc-500/20";
     }
   };
 
-  const sizeStyles = size === "sm" ? "px-[6px] py-[1px] text-[10px]" : "px-sm py-[2px] text-label-caps";
+  const sizeStyles = size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs";
 
   return (
     <span
       className={clsx(
-        "inline-flex items-center font-label-caps uppercase tracking-wider rounded-full border",
+        "inline-flex items-center font-medium rounded-full border transition-colors",
         getStatusStyles(),
         sizeStyles,
         className
       )}
     >
-      {normalized.replace("_", " ")}
+      {normalized.replace(/_/g, " ").toLowerCase()}
     </span>
   );
 }
@@ -68,17 +68,23 @@ export function ConfidenceBadge({ confidence, className }: ConfidenceBadgeProps)
   const getStyles = () => {
     switch (confidence) {
       case "HIGH":
-        return "text-[#3fb950] border-[#3fb950]/40 bg-[#3fb950]/10";
+        return "text-emerald-500 border-emerald-500/20 bg-emerald-500/10";
       case "MEDIUM":
-        return "text-[#d29922] border-[#d29922]/40 bg-[#d29922]/10";
+        return "text-amber-500 border-amber-500/20 bg-amber-500/10";
       case "SPECULATIVE":
-        return "text-[#bec7d2] border-[#bec7d2]/40 bg-[#bec7d2]/10";
+        return "text-zinc-400 border-zinc-500/20 bg-zinc-500/10";
     }
   };
 
   return (
-    <span className={clsx("font-label-caps text-[10px] px-sm py-[2px] rounded-sm border uppercase", getStyles(), className)}>
-      {confidence} CONFIDENCE
+    <span
+      className={clsx(
+        "font-medium text-[11px] px-2.5 py-0.5 rounded-full border",
+        getStyles(),
+        className
+      )}
+    >
+      {confidence.toLowerCase()} confidence
     </span>
   );
 }
@@ -92,17 +98,23 @@ export function ClassificationBadge({ classification, className }: Classificatio
   const getStyles = () => {
     switch (classification) {
       case "EXPLICIT":
-        return "text-primary border-primary/40 bg-primary/10";
+        return "text-primary border-primary/20 bg-primary/10";
       case "STRONGLY_SUPPORTED":
-        return "text-secondary border-secondary/40 bg-secondary/10";
+        return "text-blue-500 border-blue-500/20 bg-blue-500/10";
       case "WEAK_INFERENCE":
-        return "text-on-surface-variant border-outline bg-surface-container-high";
+        return "text-on-surface-variant border-outline bg-surface-container";
     }
   };
 
   return (
-    <span className={clsx("font-label-caps text-[10px] px-sm py-[2px] rounded-sm border uppercase", getStyles(), className)}>
-      {classification.replace("_", " ")}
+    <span
+      className={clsx(
+        "font-medium text-[11px] px-2.5 py-0.5 rounded-full border",
+        getStyles(),
+        className
+      )}
+    >
+      {classification.replace(/_/g, " ").toLowerCase()}
     </span>
   );
 }

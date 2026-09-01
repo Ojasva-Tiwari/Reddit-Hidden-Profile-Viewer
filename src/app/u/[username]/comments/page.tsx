@@ -3,9 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { Button } from "@/components/ui/Button";
 import { LoadingState, EmptyState, ErrorState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
 import { CommentItem } from "@/types";
@@ -63,85 +60,67 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
   };
 
   return (
-    <>
-      {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md pb-xs border-b border-outline">
-        <div>
-          <h1 className="font-headline-md text-headline-md text-on-surface flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[24px] text-secondary" data-icon="forum">
-              forum
-            </span>
-            <span>Historical Comments Feed</span>
-          </h1>
-          <p className="font-code text-code text-on-surface-variant">
-            Target: u/{username} • Showing {comments.length} records (Page {page})
-          </p>
+    <div className="space-y-6">
+      {/* Clean Filter Bar */}
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex flex-col sm:flex-row items-center gap-3 bg-surface-container/60 p-2 sm:p-2.5 rounded-2xl border border-outline/40"
+      >
+        <div className="relative flex-1 w-full">
+          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant pointer-events-none">
+            search
+          </span>
+          <input
+            type="text"
+            placeholder="Search comments..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-surface text-on-surface placeholder:text-on-surface-variant/50 border border-outline/50 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary transition-colors"
+          />
         </div>
-      </div>
 
-      {/* Archival Coverage Notice */}
-      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
-        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
-        <span>Archive coverage is historical. Records reflect snapshots preserved at time of ingestion.</span>
-      </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface text-on-surface border border-outline/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors flex-1 sm:flex-none cursor-pointer"
+          >
+            <option value="ALL">All content</option>
+            <option value="VISIBLE">Visible only</option>
+            <option value="DELETED">Deleted only</option>
+            <option value="REMOVED">Removed only</option>
+            <option value="EDITED">Edited only</option>
+            <option value="DELETED_LATER">Deleted later</option>
+          </select>
 
-      {/* Filter Toolbar */}
-      <Card level={1} density="compact">
-        <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center gap-sm">
-          <div className="flex-1 w-full">
-            <Input
-              icon="search"
-              placeholder="Search keywords in comments..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          <select
+            value={sortOption}
+            onChange={(e) => {
+              setSortOption(e.target.value);
+              setPage(1);
+            }}
+            className="bg-surface text-on-surface border border-outline/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary transition-colors flex-1 sm:flex-none cursor-pointer"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="score">Highest score</option>
+          </select>
+        </div>
+      </form>
 
-          <div className="flex items-center gap-sm w-full md:w-auto">
-            <Select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="ALL">All Statuses</option>
-              <option value="VISIBLE">Visible Only</option>
-              <option value="DELETED">Deleted Only</option>
-              <option value="REMOVED">Removed Only</option>
-              <option value="EDITED">Edited Only</option>
-              <option value="DELETED_LATER">Deleted Later</option>
-            </Select>
-
-            <Select
-              value={sortOption}
-              onChange={(e) => {
-                setSortOption(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="newest">Sort: Newest</option>
-              <option value="oldest">Sort: Oldest</option>
-              <option value="score">Sort: Score</option>
-            </Select>
-
-            <Button type="submit" variant="secondary" size="md">
-              FILTER
-            </Button>
-          </div>
-        </form>
-      </Card>
-
-      {/* Comments List or State Displays */}
+      {/* Comments List */}
       {loading ? (
-        <LoadingState message={`Retrieving comments feed for u/${username}...`} />
+        <LoadingState message={`Loading comments for u/${username}...`} />
       ) : error ? (
-        <ErrorState title="Comments Feed Query Failed" message={error} onRetry={fetchComments} />
+        <ErrorState title="Could not load comments" message={error} onRetry={fetchComments} />
       ) : comments.length === 0 ? (
         <EmptyState
-          title="No Historical Comments Found"
-          description={`No comments matching the selected filters were found for u/${username}.`}
-          actionLabel="RESET FILTERS"
+          title="No comments found"
+          description={`No comments matched the selected filters for u/${username}.`}
+          actionLabel="Reset filters"
           onAction={() => {
             setStatusFilter("ALL");
             setSearchQuery("");
@@ -150,7 +129,7 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
           }}
         />
       ) : (
-        <div className="space-y-sm">
+        <div className="space-y-4">
           {comments.map((c) => (
             <Card
               key={c.id}
@@ -158,14 +137,14 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
               density="normal"
               hoverable
               onClick={() => setSelectedComment(c)}
-              className="space-y-xs"
+              className="space-y-3"
             >
               {/* Header info */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-xs font-code text-code text-on-surface-variant">
-                  <span className="text-secondary font-medium">r/{c.subreddit || c.subredditName}</span>
-                  <span>•</span>
-                  <span className="text-primary">{c.redditId}</span>
+              <div className="flex items-center justify-between text-xs text-on-surface-variant">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-primary">
+                    r/{c.subreddit || c.subredditName}
+                  </span>
                   <span>•</span>
                   <span>{new Date(c.createdUtc).toLocaleDateString()}</span>
                 </div>
@@ -174,49 +153,57 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
 
               {/* Parent context box if present */}
               {c.parentContext && (
-                <div className="p-xs px-sm bg-surface-container-lowest border-l-2 border-outline font-body-dense text-[12px] text-on-surface-variant italic mb-xs">
-                  In reply to u/{c.parentContext.author}: &quot;{c.parentContext.bodySnippet}&quot;
+                <div className="p-3 bg-surface-container rounded-xl text-xs text-on-surface-variant space-y-0.5">
+                  <span className="font-medium text-on-surface">
+                    In reply to u/{c.parentContext.author || "user"}:
+                  </span>
+                  <p className="italic line-clamp-2">
+                    &ldquo;{c.parentContext.bodySnippet || "..."}&rdquo;
+                  </p>
                 </div>
               )}
 
               {/* Comment Body */}
-              <p className="font-body-base text-body-base text-on-surface line-clamp-3">
+              <p className="text-sm text-on-surface line-clamp-4 leading-relaxed whitespace-pre-wrap">
                 {c.body}
               </p>
 
-              <div className="flex items-center justify-between pt-xs border-t border-outline/40 font-code text-code text-on-surface-variant">
-                <span className="flex items-center gap-xs">
-                  <span className="material-symbols-outlined text-[14px]" data-icon="thumb_up">
-                    thumb_up
+              {/* Footer */}
+              <div className="flex items-center justify-between pt-2 border-t border-outline/30 text-xs text-on-surface-variant">
+                <span className="flex items-center gap-1 font-medium text-on-surface">
+                  <span className="material-symbols-outlined text-[15px] text-primary">
+                    arrow_upward
                   </span>
-                  Score: {c.score}
+                  {c.score}
                 </span>
-                <span className="font-label-caps text-label-caps text-secondary">VIEW CONTEXT →</span>
+
+                <span className="text-xs text-primary font-medium flex items-center gap-1">
+                  <span>View context</span>
+                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </span>
               </div>
             </Card>
           ))}
 
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-between pt-md">
-            <Button
-              variant="outline"
-              size="sm"
+          {/* Clean Pagination */}
+          <div className="flex items-center justify-between pt-4 text-sm">
+            <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="px-4 py-2 rounded-full border border-outline/50 bg-surface-container hover:bg-surface-container-high text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              ← PREVIOUS PAGE
-            </Button>
-            <span className="font-code text-code text-on-surface-variant">
+              Previous
+            </button>
+            <span className="text-xs text-on-surface-variant font-medium">
               Page {page}
             </span>
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               disabled={!hasMore}
               onClick={() => setPage((p) => p + 1)}
+              className="px-4 py-2 rounded-full border border-outline/50 bg-surface-container hover:bg-surface-container-high text-on-surface disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              NEXT PAGE →
-            </Button>
+              Next
+            </button>
           </div>
         </div>
       )}
@@ -256,6 +243,6 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
           ]}
         />
       )}
-    </>
+    </div>
   );
 }

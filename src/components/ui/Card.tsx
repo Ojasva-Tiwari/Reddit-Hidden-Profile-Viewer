@@ -16,24 +16,24 @@ export function Card({
   ...props
 }: CardProps) {
   const levelStyles = {
-    0: "bg-surface border border-outline",
-    1: "bg-surface-container-low border border-outline",
-    2: "bg-surface-container-lowest border border-outline",
+    0: "bg-surface border border-outline/50 shadow-card",
+    1: "bg-surface-container-low border border-outline/60 shadow-card",
+    2: "bg-surface-container border border-outline/40 shadow-sm",
   };
 
   const densityStyles = {
-    compact: "p-sm",
-    normal: "p-md",
-    spacious: "p-lg md:p-xl",
+    compact: "p-3 sm:p-4",
+    normal: "p-5 sm:p-6",
+    spacious: "p-6 sm:p-8",
   };
 
   return (
     <div
       className={clsx(
-        "rounded-sm transition-colors duration-150",
+        "rounded-2xl transition-all duration-200",
         levelStyles[level],
         densityStyles[density],
-        hoverable && "hover:border-outline-variant hover:bg-surface-container-high cursor-pointer",
+        hoverable && "hover:border-outline hover:shadow-card-hover cursor-pointer",
         className
       )}
       {...props}

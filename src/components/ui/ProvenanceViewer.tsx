@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { ContentStatus } from "@/types";
 import { StatusBadge } from "./StatusBadge";
@@ -20,103 +22,111 @@ interface ProvenanceViewerProps {
 }
 
 export function ProvenanceViewer({
-  sourceOrigin = "ARCTIC_SHIFT",
+  sourceOrigin = "Arctic Shift",
   sourceId,
   capturedUtc,
   status,
   history = [],
 }: ProvenanceViewerProps) {
-  const [selectedVersion, setSelectedVersion] = useState<number>(history.length > 0 ? history[history.length - 1].version : 1);
+  const [showTechnical, setShowTechnical] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState<number>(
+    history.length > 0 ? history[history.length - 1].version : 1
+  );
 
   const hasMultipleRevisions = history.length > 1;
   const currentObserved = history.find((h) => h.version === selectedVersion) || history[0];
 
   return (
-    <div className="space-y-md">
-      {/* Forensic Provenance Metadata Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-xs p-sm bg-surface-container-lowest border border-outline rounded-sm font-code text-code text-[11px]">
-        <div>
-          <span className="text-on-surface-variant block text-[10px]">SOURCE DATASET</span>
-          <span className="text-secondary font-bold truncate block">{sourceOrigin}</span>
+    <div className="space-y-3 pt-2">
+      {/* Summary Status Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-surface-container rounded-xl border border-outline/40 text-xs">
+        <div className="flex items-center gap-2">
+          <span className="text-on-surface-variant">Status:</span>
+          <StatusBadge status={status} size="sm" />
         </div>
-        <div>
-          <span className="text-on-surface-variant block text-[10px]">SOURCE FULLNAME ID</span>
-          <span className="text-primary font-bold truncate block">{sourceId}</span>
-        </div>
-        <div>
-          <span className="text-on-surface-variant block text-[10px]">CAPTURED TIMESTAMP</span>
-          <span className="text-on-surface truncate block">
-            {capturedUtc ? new Date(capturedUtc).toLocaleString() : "Unknown"}
+        <div className="text-on-surface-variant flex items-center gap-1.5">
+          <span>Captured:</span>
+          <span className="text-on-surface font-medium">
+            {capturedUtc ? new Date(capturedUtc).toLocaleDateString() : "Historical"}
           </span>
         </div>
-        <div>
-          <span className="text-on-surface-variant block text-[10px]">HISTORICAL STATUS</span>
-          <div className="mt-[2px]">
-            <StatusBadge status={status} size="sm" />
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => setShowTechnical(!showTechnical)}
+          className="text-primary hover:underline flex items-center gap-1 font-medium ml-auto text-xs"
+        >
+          <span>{showTechnical ? "Hide technical details" : "Technical details"}</span>
+          <span className="material-symbols-outlined text-[14px]">
+            {showTechnical ? "expand_less" : "expand_more"}
+          </span>
+        </button>
       </div>
 
-      {/* Revision Observations / Diff Section */}
-      <div className="space-y-xs">
-        <div className="flex items-center justify-between">
-          <h4 className="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[16px] text-secondary" data-icon="history">
-              history
-            </span>
-            <span>OBSERVED REVISIONS & CONTENT SNAPSHOTS</span>
-          </h4>
-          {hasMultipleRevisions && (
-            <span className="text-[11px] font-code text-secondary">
-              {history.length} Revisions Recorded
-            </span>
+      {/* Collapsible Technical Metadata */}
+      {showTechnical && (
+        <div className="p-4 bg-surface-container rounded-xl border border-outline/50 text-xs space-y-3 animate-in fade-in duration-150">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div>
+              <span className="text-on-surface-variant block text-[11px]">Source</span>
+              <span className="text-on-surface font-medium">{sourceOrigin}</span>
+            </div>
+            <div>
+              <span className="text-on-surface-variant block text-[11px]">Reddit ID</span>
+              <span className="font-mono text-on-surface text-[11px]">{sourceId}</span>
+            </div>
+            <div>
+              <span className="text-on-surface-variant block text-[11px]">Exact Captured Time</span>
+              <span className="text-on-surface text-[11px]">
+                {capturedUtc ? new Date(capturedUtc).toLocaleString() : "Unknown"}
+              </span>
+            </div>
+          </div>
+
+          {/* Revisions & Diff */}
+          {hasMultipleRevisions ? (
+            <div className="space-y-2 pt-2 border-t border-outline/30">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-on-surface">Revision History ({history.length})</span>
+                <div className="flex gap-1">
+                  {history.map((rev) => (
+                    <button
+                      key={rev.version}
+                      type="button"
+                      onClick={() => setSelectedVersion(rev.version)}
+                      className={`px-2 py-0.5 rounded-lg text-xs font-medium transition-colors ${
+                        selectedVersion === rev.version
+                          ? "bg-primary text-white"
+                          : "bg-surface text-on-surface-variant hover:bg-surface-container-high"
+                      }`}
+                    >
+                      v{rev.version}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-3 bg-surface rounded-lg border border-outline/30 space-y-1">
+                <div className="text-[11px] text-on-surface-variant flex justify-between">
+                  <span>{new Date(currentObserved.recordedAt).toLocaleString()}</span>
+                  <StatusBadge status={currentObserved.status} size="sm" />
+                </div>
+                <p className="text-xs text-on-surface whitespace-pre-wrap">
+                  {currentObserved.content || "(No text recorded)"}
+                </p>
+                {currentObserved.diffPatch && (
+                  <pre className="mt-2 p-2 bg-surface-container-lowest rounded text-[11px] font-mono text-on-surface-variant overflow-x-auto">
+                    {currentObserved.diffPatch}
+                  </pre>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="text-on-surface-variant text-[11px] italic pt-1">
+              No previous revision history available. (Single archival snapshot).
+            </div>
           )}
         </div>
-
-        {hasMultipleRevisions ? (
-          <div className="space-y-sm">
-            {/* Version Selector Tabs */}
-            <div className="flex items-center gap-xs border-b border-outline pb-xs">
-              {history.map((rev) => (
-                <button
-                  key={rev.version}
-                  type="button"
-                  onClick={() => setSelectedVersion(rev.version)}
-                  className={`px-sm py-[2px] rounded-sm font-code text-[11px] border transition-colors ${
-                    selectedVersion === rev.version
-                      ? "bg-secondary text-[#000000] font-bold border-secondary"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface-variant border-outline"
-                  }`}
-                >
-                  Version {rev.version} ({new Date(rev.recordedAt).toLocaleDateString()})
-                </button>
-              ))}
-            </div>
-
-            {/* Version Snapshot Content */}
-            <div className="p-md bg-[#0D1117] border border-outline rounded-sm space-y-xs font-code text-code text-[12px]">
-              <div className="flex items-center justify-between border-b border-outline/40 pb-xs text-[11px] text-on-surface-variant">
-                <span>Recorded: {new Date(currentObserved.recordedAt).toLocaleString()}</span>
-                <StatusBadge status={currentObserved.status} size="sm" />
-              </div>
-              <p className="font-body-base text-body-base text-on-surface whitespace-pre-wrap">
-                {currentObserved.content || "(No textual content recorded)"}
-              </p>
-              {currentObserved.diffPatch && (
-                <div className="mt-sm p-sm bg-[#161B22] border border-[#30363D] rounded-sm font-code text-[11px] text-on-surface-variant overflow-x-auto">
-                  <span className="text-secondary block font-bold mb-xs">Diff Patch from Previous:</span>
-                  <pre className="text-[11px]">{currentObserved.diffPatch}</pre>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="p-sm bg-surface-container-lowest border border-outline rounded-sm font-code text-code text-[11px] text-on-surface-variant/80 italic flex items-center gap-xs">
-            <span className="material-symbols-outlined text-[14px]">info</span>
-            <span>NO REVISION HISTORY AVAILABLE (Single point-in-time snapshot observed in archive)</span>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

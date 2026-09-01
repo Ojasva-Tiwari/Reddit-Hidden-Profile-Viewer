@@ -18,8 +18,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reddit Hidden Profile Viewer — Forensic Archive",
-  description: "High-density historical Reddit profile exploration, content recovery status, and evidence-backed AI profiling.",
+  title: "Reddit Profile Viewer",
+  description: "Look up a Reddit profile with its posts, comments, history, and evidence-backed insights.",
 };
 
 export default function RootLayout({
@@ -52,10 +52,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-on-background min-h-screen flex flex-col antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-on-background min-h-screen flex flex-col antialiased transition-colors`}>
         <ThemeProvider>
           <TopNavBar />
-          <div className="flex-1 pt-12 flex flex-col">
+          <div className="flex-1 flex flex-col">
             {children}
           </div>
           <GlobalFooter />
