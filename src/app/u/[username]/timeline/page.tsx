@@ -1,17 +1,70 @@
 "use client";
 
-import React, { useState } from "react";
-import { SAMPLE_TIMELINE } from "@/lib/sampleData";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { LoadingState, ErrorState, EmptyState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
+import { TimelineEvent } from "@/types";
 
 export default function TimelinePage({ params }: { params: { username: string } }) {
-  const username = decodeURIComponent(params.username);
-  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
+  const username = decodeURIComponent(params.username).replace(/^u\//i, "");
+
+  const [events, setEvents] = useState<TimelineEvent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
+
+  const fetchTimeline = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/profile/${encodeURIComponent(username)}/timeline?limit=100&sort=newest`);
+      const json = await res.json();
+
+      if (!res.ok || json.error) {
+        setError(json.error?.message || "Failed to load timeline events from archive.");
+      } else {
+        setEvents(json.data || []);
+      }
+    } catch (err: any) {
+      setError(`Network error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTimeline();
+  }, [username]);
+
+  if (loading) {
+    return <LoadingState message={`Constructing chronological activity timeline for u/${username}...`} />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        title="Timeline Query Failed"
+        message={error}
+        onRetry={fetchTimeline}
+      />
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <EmptyState
+        title="No Timeline Records Found"
+        description={`No chronological activity events could be reconstructed for u/${username}.`}
+        actionLabel="RETRY"
+        onAction={fetchTimeline}
+      />
+    );
+  }
 
   // Group timeline events by year
-  const years = Array.from(new Set(SAMPLE_TIMELINE.map((e) => e.year))).sort((a, b) => b - a);
+  const years = Array.from(new Set(events.map((e) => e.year))).sort((a, b) => b - a);
 
   return (
     <>
@@ -24,7 +77,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
             <span>Historical Activity Timeline</span>
           </h1>
           <p className="font-code text-code text-on-surface-variant">
-            Target: u/{username} • Chronological activity & moderation milestones
+            Target: u/{username} • Chronological stream of {events.length} submissions and comments
           </p>
         </div>
       </div>
@@ -32,7 +85,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
       {/* Timeline Stream */}
       <div className="space-y-lg relative pl-6 md:pl-8 border-l border-outline ml-2 md:ml-4 mt-md">
         {years.map((year) => {
-          const eventsInYear = SAMPLE_TIMELINE.filter((e) => e.year === year);
+          const eventsInYear = events.filter((e) => e.year === year);
           return (
             <div key={year} className="space-y-md relative">
               {/* Year Anchor Node */}
@@ -47,7 +100,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
               <div className="space-y-sm pt-6">
                 {eventsInYear.map((ev) => (
                   <Card
-                    key={ev.id}
+                    key={`${ev.type}_${ev.id}`}
                     level={1}
                     density="normal"
                     hoverable
@@ -60,6 +113,8 @@ export default function TimelinePage({ params }: { params: { username: string } 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-xs font-code text-code text-on-surface-variant">
                         <span className="text-secondary font-medium">r/{ev.subreddit}</span>
+                        <span>•</span>
+                        <span className="text-primary">{ev.redditId}</span>
                         <span>•</span>
                         <span>{ev.dateStr}</span>
                         <span>•</span>
@@ -97,14 +152,14 @@ export default function TimelinePage({ params }: { params: { username: string } 
           author={username}
           subreddit={selectedEvent.subreddit}
           redditId={selectedEvent.redditId}
-          createdUtc={new Date().toISOString()}
+          createdUtc={selectedEvent.dateStr}
           status={selectedEvent.status}
           score={selectedEvent.score}
           currentBody={selectedEvent.snippet}
           provenanceHistory={[
             {
               version: 1,
-              recordedAt: new Date().toISOString(),
+              recordedAt: selectedEvent.dateStr,
               status: selectedEvent.status,
               content: selectedEvent.snippet,
             },

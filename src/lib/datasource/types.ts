@@ -19,6 +19,7 @@ export interface RedditUser {
   commentKarma: number;
   isSuspended: boolean;
   isDeleted: boolean;
+  rawPayload?: Record<string, any>;
 }
 
 export interface RedditPost {

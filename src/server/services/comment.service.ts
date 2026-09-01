@@ -1,8 +1,30 @@
 import { IRedditDataSource } from "@/lib/datasource/reddit-data-source";
 import { defaultArcticShiftSource } from "@/lib/datasource/arctic-shift-source";
-import { CommentRepository } from "@/server/repositories";
+import { CommentRepository, UserRepository } from "@/server/repositories";
 import { RedditComment } from "@/lib/datasource/types";
-import { CommentItem } from "@/types";
+import { CommentItem, ContentStatus } from "@/types";
+
+export interface CommentsQueryFilter {
+  page?: number;
+  limit?: number;
+  sort?: "newest" | "oldest" | "score";
+  status?: string;
+  subreddit?: string;
+  from?: number;
+  to?: number;
+  search?: string;
+}
+
+export interface CommentsQueryResult {
+  comments: CommentItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+  source: "DATABASE" | "UPSTREAM";
+}
 
 export class CommentService {
   private dataSource: IRedditDataSource;
@@ -12,15 +34,100 @@ export class CommentService {
   }
 
   /**
-   * Fetches comments for an author from the data source with pagination.
+   * Queries comments by author with full filtering and pagination.
    */
-  async fetchComments(username: string, limit = 25, before?: number) {
-    return this.dataSource.getComments({
+  async queryComments(username: string, filter: CommentsQueryFilter = {}): Promise<CommentsQueryResult> {
+    const page = filter.page || 1;
+    const limit = Math.min(filter.limit || 25, 100);
+    const offset = (page - 1) * limit;
+
+    // 1. Try local PostgreSQL database first
+    try {
+      const user = await UserRepository.findByUsername(username);
+      if (user) {
+        const dbComments = await CommentRepository.findByAuthorId(user.id, {
+          limit,
+          offset,
+          status: filter.status,
+          subreddit: filter.subreddit,
+          sort: filter.sort,
+        });
+
+        if (dbComments.length > 0) {
+          const totalCount = await CommentRepository.countByAuthorId(user.id, filter.status);
+
+          let mappedComments: CommentItem[] = dbComments.map((c) => ({
+            id: c.redditId,
+            redditId: c.redditId,
+            postId: c.postRedditId,
+            postRedditId: c.postRedditId,
+            parentId: c.parentId,
+            parentRedditId: c.parentId,
+            author: c.authorUsername,
+            authorUsername: c.authorUsername,
+            subreddit: c.subredditName,
+            subredditName: c.subredditName,
+            body: c.body,
+            permalink: c.permalink || undefined,
+            score: c.score,
+            createdUtc: c.createdUtc.toISOString(),
+            editedUtc: c.editedUtc ? c.editedUtc.toISOString() : undefined,
+            status: c.status as ContentStatus,
+            isDistinguished: c.isDistinguished || undefined,
+          }));
+
+          if (filter.search) {
+            const q = filter.search.toLowerCase();
+            mappedComments = mappedComments.filter((c) => c.body.toLowerCase().includes(q));
+          }
+
+          return {
+            comments: mappedComments,
+            pagination: {
+              page,
+              limit,
+              total: totalCount,
+              hasMore: offset + dbComments.length < totalCount,
+            },
+            source: "DATABASE",
+          };
+        }
+      }
+    } catch (dbErr: any) {
+      console.warn(`[CommentService] DB query unavailable: ${dbErr.message}`);
+    }
+
+    // 2. Query upstream Arctic Shift
+    const upstreamRes = await this.dataSource.getComments({
       author: username,
       limit,
-      before,
-      sort: "desc",
+      subreddit: filter.subreddit,
+      sort: filter.sort === "oldest" ? "asc" : "desc",
+      before: filter.to,
+      after: filter.from,
     });
+
+    let items = upstreamRes.data.map(CommentService.toCommentItem);
+
+    if (filter.status && filter.status !== "ALL") {
+      items = items.filter((c) => c.status === filter.status);
+    }
+
+    if (filter.search) {
+      const q = filter.search.toLowerCase();
+      items = items.filter((c) => c.body.toLowerCase().includes(q));
+    }
+
+    return {
+      comments: items,
+      pagination: {
+        page,
+        limit,
+        total: items.length,
+        hasMore: upstreamRes.hasMore,
+      },
+      source: "UPSTREAM",
+    };
   }
 
   /**

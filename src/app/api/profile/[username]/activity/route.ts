@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { defaultProfileService } from "@/server/services/profile.service";
+import { defaultActivityService } from "@/server/services/activity.service";
 import { usernameParamSchema } from "@/server/schemas/api.schemas";
 import { checkRateLimit } from "@/server/middleware/rate-limiter";
 
@@ -17,29 +17,21 @@ export async function GET(
     );
   }
 
-  const parseResult = usernameParamSchema.safeParse(params.username);
-  if (!parseResult.success) {
+  const userParse = usernameParamSchema.safeParse(params.username);
+  if (!userParse.success) {
     return NextResponse.json(
-      { error: { code: "INVALID_USERNAME", message: parseResult.error.errors[0].message } },
+      { error: { code: "INVALID_USERNAME", message: userParse.error.errors[0].message } },
       { status: 400 }
     );
   }
 
-  const result = await defaultProfileService.getProfile(parseResult.data);
-
-  if (!result.success || !result.user) {
-    return NextResponse.json(
-      { error: { code: "USER_NOT_FOUND", message: result.error || "Profile not found." } },
-      { status: result.statusCode }
-    );
-  }
+  const activity = await defaultActivityService.getActivityDistribution(userParse.data);
 
   return NextResponse.json({
-    data: result.user,
+    data: activity,
     meta: {
-      source: result.source,
-      cached: result.source === "DATABASE",
-      syncStatus: result.user.syncStatus,
+      source: "ARCTIC_SHIFT",
+      calculatedAt: new Date().toISOString(),
     },
   });
 }

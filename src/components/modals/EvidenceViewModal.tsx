@@ -92,7 +92,7 @@ export function EvidenceViewModal({
               EXTRACTED PROVENANCE QUOTE
             </h4>
             <div className="p-md bg-[#0D1117] border-l-2 border-secondary rounded-r-sm font-body-base text-on-surface italic">
-              "{exactQuote}"
+              &quot;{exactQuote}&quot;
             </div>
           </div>
 

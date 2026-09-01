@@ -17,21 +17,21 @@ export default function ProfileOverviewPage({ params }: { params: { username: st
   const [syncing, setSyncing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [dataSourceOrigin, setDataSourceOrigin] = useState<string>("UPSTREAM");
-  const [selectedContent, setSelectedContent] = useState<any | null>(null);
 
   const fetchProfileData = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch(`/api/profile/${encodeURIComponent(username)}`);
-      const data = await res.json();
+      const json = await res.json();
 
-      if (!res.ok || !data.success) {
-        setError(data.error || `No historical records found for user u/${username}.`);
+      if (!res.ok || json.error) {
+        setError(json.error?.message || `No historical records found for user u/${username}.`);
         setProfile(null);
       } else {
-        setProfile(data.user);
-        setDataSourceOrigin(data.source || "ARCTIC_SHIFT");
+        const userData = json.data || json.user;
+        setProfile(userData);
+        setDataSourceOrigin(json.meta?.source || json.source || "ARCTIC_SHIFT");
       }
     } catch (err: any) {
       setError(`Failed to connect to internal profile API: ${err.message}`);
