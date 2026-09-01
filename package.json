@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test": "tsx scripts/test-milestone3.ts",
+    "test:smoke": "tsx scripts/smoke-test-live.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:push": "drizzle-kit push",
