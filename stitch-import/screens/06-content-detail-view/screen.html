@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OSINT_ARCHIVE - Content Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#370e00",
+                    "on-background": "#e5e2e1",
+                    "on-secondary-fixed": "#001b3e",
+                    "surface-container-highest": "#353534",
+                    "error": "#ffb4ab",
+                    "on-surface": "#e5e2e1",
+                    "surface": "#131313",
+                    "secondary-container": "#0072e3",
+                    "secondary": "#aac7ff",
+                    "on-secondary-container": "#fefcff",
+                    "on-error": "#690005",
+                    "tertiary": "#bec7d2",
+                    "on-primary-container": "#4e1800",
+                    "on-tertiary-fixed-variant": "#3f4850",
+                    "on-secondary": "#002f65",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-tint": "#ffb598",
+                    "inverse-primary": "#a04010",
+                    "on-primary-fixed-variant": "#7e2c00",
+                    "surface-container-high": "#2a2a2a",
+                    "on-tertiary-container": "#222b33",
+                    "surface-bright": "#393939",
+                    "secondary-fixed": "#d7e3ff",
+                    "primary-fixed-dim": "#ffb598",
+                    "tertiary-fixed-dim": "#bec7d2",
+                    "on-tertiary-fixed": "#141c24",
+                    "surface-container-low": "#1c1b1b",
+                    "tertiary-container": "#89929c",
+                    "primary-fixed": "#ffdbce",
+                    "surface-container": "#201f1f",
+                    "primary-container": "#e2703e",
+                    "surface-dim": "#131313",
+                    "error-container": "#93000a",
+                    "on-primary": "#591d00",
+                    "tertiary-fixed": "#dae3ee",
+                    "background": "#131313",
+                    "outline-variant": "#57423a",
+                    "on-error-container": "#ffdad6",
+                    "outline": "#a58b82",
+                    "on-secondary-fixed-variant": "#00458e",
+                    "on-surface-variant": "#ddc0b6",
+                    "secondary-fixed-dim": "#aac7ff",
+                    "inverse-on-surface": "#313030",
+                    "on-tertiary": "#29313a",
+                    "surface-variant": "#353534",
+                    "inverse-surface": "#e5e2e1",
+                    "primary": "#ffb598"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "lg": "16px",
+                    "md": "12px",
+                    "gutter": "12px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "24px",
+                    "margin-desktop": "24px",
+                    "margin-mobile": "12px"
+            },
+            "fontFamily": {
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-sm": [
+                            "Inter"
+                    ],
+                    "body-dense": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "JetBrains Mono"
+                    ],
+                    "body-base": [
+                            "Inter"
+                    ],
+                    "code": [
+                            "JetBrains Mono"
+                    ]
+            },
+            "fontSize": {
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-sm": [
+                            "16px",
+                            {
+                                    "lineHeight": "22px",
+                                    "letterSpacing": "-0.005em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-dense": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-caps": [
+                            "11px",
+                            {
+                                    "lineHeight": "14px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-base": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "code": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-surface text-primary dark:text-primary font-headline-sm text-headline-sm fixed top-0 w-full z-50 border-b border-outline-variant flex justify-between items-center h-12 px-gutter">
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps tracking-widest text-primary font-bold">OSINT_ARCHIVE</span>
+</div>
+<!-- Search Left placeholder -->
+<div class="flex-1 px-lg max-w-md hidden md:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1.5 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-[#0D1117] border border-[#30363D] text-on-surface rounded-sm py-1 pl-8 pr-3 font-code text-code focus:outline-none focus:border-[#388BFD]" placeholder="Search archive..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-1 hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium active:opacity-80 transition-opacity rounded-sm">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-1 hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium active:opacity-80 transition-opacity rounded-sm">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-1 hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium active:opacity-80 transition-opacity rounded-sm">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<div class="w-6 h-6 rounded-sm bg-surface-container-high ml-2 border border-[#30363D] overflow-hidden">
+<img alt="Researcher Profile" class="w-full h-full object-cover" data-alt="A minimalist, monochromatic geometric avatar design suitable for a technical system. It features sharp angles, precise grid lines, and a high-contrast palette of deep blacks and crisp whites, conveying a sense of objective data analysis and institutional authority in a digital forensics context. The composition is entirely abstract." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnsc4m-UaSHRDLxzNFWIM2ilZR_STRxYaQUTYnunoMU5HTAuqs6i87EVIZtYjUHS5p_EEY3dg5pMgZCwkIjmUa63d4IMnHHgrYXS6z1qllRBXY_bLUqgDDKMfIUVlZaqZItKxgxL9XBsPdWXEfYcbHynpy3xwO5qPW-LW8E0ZEP9KHH8_kVtuGr8lWWqg2G4Hvw5jxnwhDXwBpLauhXxi1_dwBTJkU5m64q-Du0Mgf5Vwe0w8Mncc"/>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 pt-12">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-container-low text-primary dark:text-primary font-body-dense text-body-dense fixed left-0 top-12 h-[calc(100vh-48px)] w-[300px] border-r border-outline-variant flex flex-col py-md gap-xs hidden md:flex">
+<div class="px-md mb-4 border-b border-[#30363D] pb-md">
+<div class="flex items-center gap-sm mb-2">
+<div class="w-8 h-8 rounded-sm bg-[#1A1A1A] border border-[#30363D] flex items-center justify-center">
+<img alt="System Logo" class="w-full h-full object-cover" data-alt="A stark, minimalist icon representing a digital forensics system. The design is purely graphic, utilizing intersecting hard-edged shapes and wireframe elements in a black and white color scheme. It lacks any organic features, emphasizing precision, cold data processing, and technical exactitude within a brutalist, terminal-like aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQsg-gV_FlNLY0o0hzqkJ_6Eks0FklQJoeWieBtA4GzwD3o9xRxWSo6Bwk3J1jkdKvH6M6Lx8_1aw4QFdJcxt5NwA-ikWpHrF4tvrgiQVzlH4lpjPbU8A5EWRFFfDzSss1IZYwHLkZ5d0x3iqhl5zAOYgeQTTRBWFU_P8vcrLwDCkFHvHNfWto4Gj-718oVvV6o5hXJUTbYOzFdraZAKaIIdhvkPzroxevh-k2YyYUNZWbyc3G_vc"/>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface">ARCHIVE_V1</div>
+<div class="font-code text-code text-on-surface-variant">ID: 992-01-X</div>
+</div>
+</div>
+<button class="w-full mt-2 bg-transparent border border-[#30363D] text-on-surface-variant hover:bg-[#21262D] font-label-caps text-label-caps py-1 px-2 rounded-sm transition-colors uppercase">
+                    EXPORT DATA
+                </button>
+</div>
+<nav class="flex-1">
+<ul class="flex flex-col gap-1">
+<li>
+<a class="flex items-center gap-sm px-md py-2 bg-secondary-container text-on-secondary-container border-r-2 border-secondary font-medium cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="article">article</span>
+                            Posts
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="forum">forum</span>
+                            Comments
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+                            Activity
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="timeline">timeline</span>
+                            Timeline
+                        </a>
+</li>
+<li>
+<a class="flex items-center gap-sm px-md py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+                            AI Summary
+                        </a>
+</li>
+</ul>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-[300px] p-margin-desktop md:p-margin-desktop p-margin-mobile flex flex-col md:flex-row gap-lg max-w-[1280px] mx-auto w-full">
+<!-- Left Column: Post Content & Comments -->
+<div class="flex-1 flex flex-col gap-sm">
+<!-- Breadcrumb / Back -->
+<div class="flex items-center gap-xs text-on-surface-variant font-code text-code mb-2">
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-on-surface">arrow_back</span>
+<span class="cursor-pointer hover:text-on-surface hover:underline">/archives/posts</span>
+<span>/</span>
+<span class="text-on-surface">id:a8f9c2</span>
+</div>
+<!-- Post Detail Card -->
+<article class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3">
+<header class="flex flex-col gap-1 mb-md pb-xs border-b border-[#30363D]">
+<div class="flex justify-between items-start">
+<h1 class="font-headline-md text-headline-md font-semibold text-on-surface">Analysis of the recent anomalies in sector 7G</h1>
+<span class="bg-[#93000a]/20 text-[#ffb4ab] border border-[#93000a] font-label-caps text-label-caps px-2 py-0.5 rounded-sm">RECOVERED</span>
+</div>
+<div class="flex items-center gap-sm font-code text-code text-on-surface-variant">
+<span class="font-bold text-on-surface">r/DataHoarder</span>
+<span>•</span>
+<span>u/SysAdmin_Throwaway99</span>
+<span>•</span>
+<span>2023-10-27T08:14:22Z</span>
+</div>
+</header>
+<div class="font-body-base text-body-base text-on-surface leading-relaxed flex flex-col gap-3">
+<p>I've been monitoring the datastreams coming out of the eastern node (Sector 7G) for the past 72 hours, and the packet loss is completely anomalous. It's not standard degradation. The dropouts are structured.</p>
+<div class="bg-[#0D1117] border border-[#30363D] p-2 rounded-sm font-code text-code text-on-surface-variant my-2 overflow-x-auto">
+<code>
+[10:22:01] INFO: Connection reset by peer<br/>
+[10:22:04] WARN: Invalid checksum detected at block 0x4F2A<br/>
+[10:22:05] ERR: Buffer overflow - initiating purge<br/>
+[10:22:09] CRIT: Handshake failed. Pattern match: SIG-OMEGA
+                            </code>
+</div>
+<p>If you look at the logs above, you'll see the <code>SIG-OMEGA</code> pattern. I haven't seen this since the incident in '19. Has anyone else archiving this sector noticed similar spikes? I'm uploading the raw pcap files to the usual dead drop.</p>
+<p>Edit: Looks like my previous post was auto-removed. Trying again with sanitized headers.</p>
+</div>
+<footer class="mt-md pt-xs border-t border-[#30363D] flex items-center gap-md font-code text-code text-on-surface-variant">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 142</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 28</div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">share</span> Share</div>
+<div class="flex items-center gap-1 ml-auto text-tertiary"><span class="material-symbols-outlined text-[14px]">verified</span> Hash Verified</div>
+</footer>
+</article>
+<!-- Comments Section -->
+<div class="mt-lg">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-sm tracking-widest border-b border-[#30363D] pb-1">RECOVERED THREAD (FRAGMENTS)</h3>
+<div class="flex flex-col gap-sm">
+<!-- Comment 1 -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 pl-4 relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#30363D]"></div>
+<div class="flex items-center gap-sm font-code text-code text-on-surface-variant mb-1">
+<span class="font-bold text-on-surface">u/NullRoute</span>
+<span>•</span>
+<span>2023-10-27T08:45:11Z</span>
+</div>
+<div class="font-body-base text-body-base text-on-surface">
+                                I'm seeing the same thing on the west coast mirrors. The <code>SIG-OMEGA</code> signature is definitely present. I strongly advise against attempting to decrypt the payload blocks locally. Sandboxing might not be enough this time.
+                            </div>
+</div>
+<!-- Comment 2 (Nested) -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 pl-8 relative ml-4">
+<div class="absolute left-4 top-0 bottom-0 w-1 bg-[#30363D]"></div>
+<div class="flex items-center gap-sm font-code text-code text-on-surface-variant mb-1">
+<span class="font-bold text-on-surface">u/SysAdmin_Throwaway99</span>
+<span class="bg-[#388BFD]/20 text-[#388BFD] px-1 rounded-sm text-[10px]">OP</span>
+<span>•</span>
+<span>2023-10-27T08:52:04Z</span>
+</div>
+<div class="font-body-base text-body-base text-on-surface">
+                                Understood. I've air-gapped the analysis machine. Are you seeing any corresponding routing table anomalies?
+                            </div>
+</div>
+<!-- Comment 3 (Deleted/Recovered) -->
+<div class="bg-[#1A1A1A] border border-[#30363D] border-dashed rounded-sm p-3 pl-4 relative opacity-80">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#93000a]"></div>
+<div class="flex justify-between items-start mb-1">
+<div class="flex items-center gap-sm font-code text-code text-on-surface-variant">
+<span class="font-bold text-on-surface line-through">u/[DELETED]</span>
+<span>•</span>
+<span>2023-10-27T09:12:33Z</span>
+</div>
+<span class="bg-[#93000a]/20 text-[#ffb4ab] border border-[#93000a] font-label-caps text-label-caps px-1 py-0 rounded-sm text-[10px]">PARTIAL RECOVERY</span>
+</div>
+<div class="font-body-base text-body-base text-on-surface font-code text-code">
+                                ...they are routing it through [REDACTED]. Shut down your nodes immediately. They are tracing the ... <span class="text-[#ffb4ab]">[DATA CORRUPTED 0x88F]</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Metadata Panel -->
+<aside class="w-full md:w-[320px] flex flex-col gap-sm">
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-md tracking-widest border-b border-[#30363D] pb-1">ARCHIVE METADATA</h2>
+<dl class="flex flex-col gap-3 font-code text-code">
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">Archive ID</dt>
+<dd class="text-on-surface">ARC-2023-10-27-081422-99A</dd>
+</div>
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">First Captured</dt>
+<dd class="text-on-surface">2023-10-27T08:15:01Z</dd>
+</div>
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">Last Captured</dt>
+<dd class="text-on-surface">2023-10-27T09:22:45Z (Pre-Deletion)</dd>
+</div>
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">Provenance</dt>
+<dd class="text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">database</span> Pushshift Archive v4
+                            </dd>
+</div>
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">Media Status</dt>
+<dd class="text-[#bec7d2] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Media Available - Archived Copy
+                            </dd>
+</div>
+<div class="flex flex-col">
+<dt class="text-on-surface-variant mb-0.5">Content Hash (SHA-256)</dt>
+<dd class="text-on-surface truncate cursor-help" title="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">
+                                e3b0c44298fc1c149afbf4...
+                            </dd>
+</div>
+</dl>
+<div class="mt-md pt-md border-t border-[#30363D]">
+<button class="w-full bg-[#D96A38] text-[#fefcff] font-label-caps text-label-caps py-2 px-3 rounded-sm transition-colors hover:bg-[#a04010] uppercase flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">download</span>
+                            Download Raw JSON
+                        </button>
+</div>
+</div>
+<!-- Analysis Tools Snippet -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-md tracking-widest border-b border-[#30363D] pb-1">ANALYSIS</h2>
+<div class="flex flex-col gap-2 font-code text-code">
+<div class="flex justify-between items-center text-on-surface">
+<span>Sentiment</span>
+<span class="text-[#ffb4ab]">Urgent / Negative</span>
+</div>
+<div class="flex justify-between items-center text-on-surface">
+<span>Entities Detected</span>
+<span>3</span>
+</div>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="border border-[#30363D] bg-[#0D1117] px-1 rounded-sm text-on-surface-variant text-[10px]">Sector 7G</span>
+<span class="border border-[#30363D] bg-[#0D1117] px-1 rounded-sm text-on-surface-variant text-[10px]">SIG-OMEGA</span>
+<span class="border border-[#30363D] bg-[#0D1117] px-1 rounded-sm text-on-surface-variant text-[10px]">PCAP</span>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-tertiary dark:text-tertiary font-code text-code relative w-full mt-auto border-t border-outline-variant flex justify-between items-center p-md md:ml-[300px]">
+<div class="font-code text-code text-on-tertiary-fixed-variant">© 2024 DIGITAL FORENSICS ARCHIVE</div>
+<div class="flex gap-md">
+<a class="text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Documentation</a>
+<a class="text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">API</a>
+<a class="text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Privacy Policy</a>
+</div>
+</footer>
+</body></html>

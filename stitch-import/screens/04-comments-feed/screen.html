@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comments Feed - OSINT Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#001b3e",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "secondary-container": "#0072e3",
+                        "secondary": "#aac7ff",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#690005",
+                        "tertiary": "#bec7d2",
+                        "on-primary-container": "#4e1800",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary": "#002f65",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#ffb598",
+                        "inverse-primary": "#a04010",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-container": "#222b33",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#d7e3ff",
+                        "primary-fixed-dim": "#ffb598",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "on-tertiary-fixed": "#141c24",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#89929c",
+                        "primary-fixed": "#ffdbce",
+                        "surface-container": "#201f1f",
+                        "primary-container": "#e2703e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary": "#591d00",
+                        "tertiary-fixed": "#dae3ee",
+                        "background": "#131313",
+                        "outline-variant": "#57423a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#a58b82",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-surface-variant": "#ddc0b6",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#29313a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "primary": "#ffb598"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-dense": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-base": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+                        "body-dense": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #121212;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for terminal feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #131313; }
+        ::-webkit-scrollbar-thumb { background: #353534; }
+        ::-webkit-scrollbar-thumb:hover { background: #57423a; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pt-12">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface fixed top-0 w-full z-50 border-b border-outline-variant flex justify-between items-center h-12 px-gutter w-full no-shadows">
+<div class="flex items-center gap-md">
+<span class="font-label-caps text-label-caps tracking-widest text-primary">OSINT_ARCHIVE</span>
+</div>
+<!-- Search (on_left in JSON, moved to center/leftish) -->
+<div class="flex-1 max-w-md mx-xl hidden md:flex items-center bg-[#0D1117] rounded-sm px-3 py-1 border border-[#30363D] focus-within:border-[#388BFD]">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none outline-none text-on-surface font-code text-code w-full placeholder:text-on-surface-variant/50 focus:ring-0 p-0" placeholder="QUERY DATABASE..." type="text"/>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-1 hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-1 hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+</button>
+<button class="p-1 hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded-sm mr-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+</button>
+<div class="w-6 h-6 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+<img alt="Researcher Profile" class="w-full h-full object-cover" data-alt="A small, stylized profile avatar for a researcher. The avatar features a minimalist geometric design in shades of scholarly blue and crisp white against a dark charcoal background. It embodies a clean, professional, and slightly secretive aesthetic suitable for a digital forensics context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc1ERWeaq7kvC8SqbVSQHqer_7SmuSl2Lq4mJVYfSag01t9O-jSuUCEgewPwCA2x56TeN75_0PqsNmc530a1OAFZIsXCi9yu-TfvWhFYBKwOX4TutAvXvcaOM-B4l5X0EnkyzjwlyP5faMf5oUkcN1pirdihWoy8PEfbsiQGKpv4d3Yn_4n30pXA_G4Uc11vAvVxqBB2O29OiFJ4DRqOeLqGHe9--k8CxQ6RF88o655nLWYM3VPyc"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-[1280px] mx-auto">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col py-md gap-xs bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-12 h-[calc(100vh-48px)] w-[300px] border-r border-outline-variant no-shadows z-40">
+<div class="px-md pb-md mb-xs border-b border-outline-variant">
+<div class="flex items-center gap-sm mb-2">
+<div class="w-8 h-8 rounded-sm bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">ARCHIVE_V1</h2>
+<p class="font-code text-code text-on-surface-variant">ID: 992-01-X</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-xs flex-1 px-sm">
+<a class="flex items-center gap-md px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+<span class="font-body-dense text-body-dense">Posts</span>
+</a>
+<a class="flex items-center gap-md px-3 py-2 bg-secondary-container text-on-secondary-container border-r-2 border-secondary cursor-pointer duration-150 rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="forum" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="font-body-dense text-body-dense">Comments</span>
+</a>
+<a class="flex items-center gap-md px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-dense text-body-dense">Activity</span>
+</a>
+<a class="flex items-center gap-md px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-body-dense text-body-dense">Timeline</span>
+</a>
+<a class="flex items-center gap-md px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 rounded-sm" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-body-dense text-body-dense">AI Summary</span>
+</a>
+</div>
+<div class="px-md mt-auto pt-md border-t border-outline-variant">
+<button class="w-full py-2 bg-transparent border border-[#30363D] text-on-surface-variant font-label-caps text-label-caps hover:bg-[#21262D] transition-colors rounded-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="download">download</span>
+                    EXPORT DATA
+                </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-[300px] w-full bg-background p-md md:p-margin-desktop overflow-y-auto">
+<div class="mb-lg flex justify-between items-end border-b border-[#30363D] pb-sm">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-background">Comments Feed</h1>
+<p class="font-code text-code text-on-surface-variant mt-1">Found 4,201 records matching criteria</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-container-highest border border-[#30363D] text-on-surface font-body-dense text-body-dense rounded-sm hover:bg-[#388BFD]/10 hover:border-[#388BFD] transition-colors">Sort: Newest</button>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<!-- Comment Card 1 -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 hover:border-[#388BFD]/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="font-label-caps text-label-caps text-tertiary">r/cybersecurity</span>
+<span class="text-[#30363D]">|</span>
+<span class="font-body-dense text-body-dense text-on-surface-variant">User: deleted_account</span>
+</div>
+<span class="px-2 py-0.5 bg-error/10 text-error font-code text-code rounded-full border border-error/20">Deleted</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface mb-3 leading-relaxed">
+                        I've seen similar indicators of compromise on our legacy systems. It looks like they are leveraging an unpatched vulnerability in the SMBv1 protocol. We mitigated it temporarily by disabling the service, but the footprint was already there. Check the event logs for ID 4624 around 03:00 UTC.
+                    </p>
+<div class="bg-[#0D1117] border border-[#30363D] p-2 rounded-sm mb-3 flex items-start gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] mt-0.5" data-icon="turn_right">turn_right</span>
+<div>
+<span class="font-code text-code text-on-surface-variant">On:</span>
+<a class="font-body-dense text-body-dense text-secondary hover:underline" href="#">Analysis of recent ransomware strains targeting healthcare infrastructure</a>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-[#30363D]">
+<div class="flex items-center gap-4">
+<span class="font-code text-code text-on-surface-variant">ID: c_8x9a2</span>
+<span class="font-code text-code text-on-surface-variant">2023-10-24 14:32:01 UTC</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-code text-code">42</span>
+</div>
+</div>
+</div>
+<!-- Comment Card 2 -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 hover:border-[#388BFD]/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="font-label-caps text-label-caps text-tertiary">r/DataHoarder</span>
+<span class="text-[#30363D]">|</span>
+<span class="font-body-dense text-body-dense text-on-surface-variant">User: archivist_99</span>
+</div>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary font-code text-code rounded-full border border-secondary/20">Archived</span>
+</div>
+<p class="font-body-base text-body-base text-on-surface mb-3 leading-relaxed">
+                        I managed to scrape the entire directory before it went down. The total payload was around 450GB. I'm currently verifying the hashes against the known good list provided last week. Will post a magnet link once confirmed.
+                    </p>
+<div class="bg-[#0D1117] border border-[#30363D] p-2 rounded-sm mb-3 flex items-start gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] mt-0.5" data-icon="turn_right">turn_right</span>
+<div>
+<span class="font-code text-code text-on-surface-variant">On:</span>
+<a class="font-body-dense text-body-dense text-secondary hover:underline" href="#">URGENT: Public dataset repo is throwing 404s, did anyone mirror it?</a>
+</div>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-[#30363D]">
+<div class="flex items-center gap-4">
+<span class="font-code text-code text-on-surface-variant">ID: c_7b3p1</span>
+<span class="font-code text-code text-on-surface-variant">2023-10-24 12:15:44 UTC</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_upward">arrow_upward</span>
+<span class="font-code text-code">128</span>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<button class="mt-4 w-full py-3 bg-transparent border border-[#30363D] text-on-surface-variant font-label-caps text-label-caps hover:bg-[#21262D] transition-colors rounded-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+                    LOAD MORE RECORDS
+                </button>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-outline-variant relative w-full mt-auto flex justify-between items-center p-md md:ml-[300px] no-shadows z-50">
+<span class="font-code text-code text-on-surface-variant">© 2024 DIGITAL FORENSICS ARCHIVE</span>
+<div class="flex gap-4">
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors" href="#">Documentation</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors" href="#">API</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors" href="#">Privacy Policy</a>
+</div>
+</footer>
+</body></html>

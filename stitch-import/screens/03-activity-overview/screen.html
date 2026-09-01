@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Activity Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#001b3e",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "secondary-container": "#0072e3",
+                        "secondary": "#aac7ff",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#690005",
+                        "tertiary": "#bec7d2",
+                        "on-primary-container": "#4e1800",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary": "#002f65",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#ffb598",
+                        "inverse-primary": "#a04010",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-container": "#222b33",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#d7e3ff",
+                        "primary-fixed-dim": "#ffb598",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "on-tertiary-fixed": "#141c24",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#89929c",
+                        "primary-fixed": "#ffdbce",
+                        "surface-container": "#201f1f",
+                        "primary-container": "#e2703e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary": "#591d00",
+                        "tertiary-fixed": "#dae3ee",
+                        "background": "#131313",
+                        "outline-variant": "#57423a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#a58b82",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-surface-variant": "#ddc0b6",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#29313a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "primary": "#ffb598"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-dense": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-base": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+                        "body-dense": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .conic-chart {
+            background: conic-gradient(
+                #ffb598 0% 65%, 
+                #353534 65% 100%
+            );
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface dark:bg-surface fixed top-0 w-full z-50 border-b border-outline-variant flex justify-between items-center h-12 px-gutter">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+<span class="font-label-caps text-label-caps tracking-widest text-primary">OSINT_ARCHIVE</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="filter_list">filter_list</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="settings">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="history">history</span>
+<img alt="Researcher Profile" class="w-8 h-8 rounded-full border border-outline-variant ml-sm" data-alt="A stark, minimalist profile avatar for a digital researcher. The image features a monochromatic, stylized silhouette of a person against a completely black background. The lighting is sharp, creating a high-contrast, technical brutalist aesthetic suitable for an intelligence archive interface. No gradients, just solid blocks of flat gray and black." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnggl2GXE9fHwCLlU6fR8isa1bknRRBdo-YM89fzyOcG5BaOtxtsyptsAKb3IZshql9JltajTlc5A6STdRqSQHXVwIkxaC7q4cPxAkCQagzv5W0iiifs4ledLBvo553h87b9jSoCC4YJUzSd-tPbNgUF-Hx0G1d0DMr37HH8pHlYvuUEZ8rJahLdHzTVv8Ntibgvh8Q271JQEQs4Pv5qNdGVR2-9zvPmExi_1n-v07Nbnc-Gl0Td4"/>
+</div>
+</nav>
+<div class="flex flex-1 pt-12">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-12 h-[calc(100vh-48px)] w-[300px] border-r border-outline-variant flex flex-col py-md gap-xs hidden md:flex">
+<div class="px-md pb-md mb-xs border-b border-outline-variant flex items-center gap-sm">
+<img alt="System Logo" class="w-6 h-6 rounded-sm" data-alt="A small, technical system logo icon. It resembles a minimalist geometric shape, perhaps a stylized hard drive or database cylinder, rendered in flat, stark white lines against a dark grey background. The style is strictly utilitarian and brutalist, conveying institutional authority and raw data processing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3UCXi-bA3WQ6Gpl4rNqzSdorhLzxcFvA5QQ9kHQF1OZd8gXmpr1D975WrRFq0SiUbphnn_jKO9Bz7oH6mD_DKcUWeluqQA2hBoVrbfpRKiGHTC57LCEszTOLMZNSWe4TH4HLAgOwBi0v4EAbsS0yhUnG9N490yjpu67CpJJb5eM68zSgzL5-jVbMX1cWuvHHdK_5wDAzRe3fyLh7nE52b95oMZ3GmfZRMih_b76-7_KyrOIo79cU"/>
+<div>
+<div class="font-label-caps text-label-caps text-on-surface">ARCHIVE_V1</div>
+<div class="font-code text-code text-on-surface-variant opacity-70">ID: 992-01-X</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-[2px]">
+<a class="flex items-center gap-sm px-md py-sm font-body-dense text-body-dense text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="article">article</span>
+                    Posts
+                </a>
+<a class="flex items-center gap-sm px-md py-sm font-body-dense text-body-dense text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="forum">forum</span>
+                    Comments
+                </a>
+<a class="flex items-center gap-sm px-md py-sm font-body-dense text-body-dense bg-secondary-container text-on-secondary-container border-r-2 border-secondary cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+                    Activity
+                </a>
+<a class="flex items-center gap-sm px-md py-sm font-body-dense text-body-dense text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="timeline">timeline</span>
+                    Timeline
+                </a>
+<a class="flex items-center gap-sm px-md py-sm font-body-dense text-body-dense text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span>
+                    AI Summary
+                </a>
+</nav>
+<div class="p-md mt-auto">
+<button class="w-full py-sm bg-transparent border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container-highest transition-colors">
+                    EXPORT DATA
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-0 md:ml-[300px] p-margin-mobile md:p-margin-desktop w-full max-w-[1280px]">
+<header class="mb-lg">
+<h1 class="font-headline-md text-headline-md text-on-surface">Activity Overview</h1>
+<p class="font-body-dense text-body-dense text-on-surface-variant mt-xs">Analysis of entity interaction patterns and volume.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-sm mb-sm">
+<!-- Key Data: First Activity -->
+<div class="bg-surface-container border border-outline-variant p-md">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">First Activity</div>
+<div class="font-code text-code text-primary">2018-04-12 14:32:01 UTC</div>
+<div class="font-body-dense text-body-dense text-on-surface-variant mt-[2px]">Subreddit: r/sysadmin</div>
+</div>
+<!-- Key Data: Last Activity -->
+<div class="bg-surface-container border border-outline-variant p-md">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Last Activity</div>
+<div class="font-code text-code text-primary">2024-10-28 09:15:44 UTC</div>
+<div class="font-body-dense text-body-dense text-on-surface-variant mt-[2px]">Subreddit: r/cybersecurity</div>
+</div>
+<!-- Total Volume -->
+<div class="bg-surface-container border border-outline-variant p-md flex items-center justify-between">
+<div>
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Total Logs</div>
+<div class="font-headline-sm text-headline-sm text-on-surface">14,289</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[32px]" data-icon="database">database</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-sm">
+<!-- Top 5 Subreddits -->
+<div class="bg-surface-container border border-outline-variant p-md lg:col-span-2 flex flex-col">
+<h2 class="font-label-caps text-label-caps text-on-surface border-b border-outline-variant pb-xs mb-md">Top 5 Subreddits</h2>
+<div class="flex-1 flex flex-col justify-center gap-sm">
+<!-- Bar 1 -->
+<div class="flex items-center gap-sm">
+<div class="w-32 font-code text-code text-on-surface-variant truncate">r/cybersecurity</div>
+<div class="flex-1 h-4 bg-surface-container-highest relative border border-outline-variant">
+<div class="absolute top-0 left-0 h-full bg-primary" style="width: 85%;"></div>
+</div>
+<div class="w-12 text-right font-code text-code text-on-surface">4.2k</div>
+</div>
+<!-- Bar 2 -->
+<div class="flex items-center gap-sm">
+<div class="w-32 font-code text-code text-on-surface-variant truncate">r/sysadmin</div>
+<div class="flex-1 h-4 bg-surface-container-highest relative border border-outline-variant">
+<div class="absolute top-0 left-0 h-full bg-primary opacity-80" style="width: 62%;"></div>
+</div>
+<div class="w-12 text-right font-code text-code text-on-surface">3.1k</div>
+</div>
+<!-- Bar 3 -->
+<div class="flex items-center gap-sm">
+<div class="w-32 font-code text-code text-on-surface-variant truncate">r/technology</div>
+<div class="flex-1 h-4 bg-surface-container-highest relative border border-outline-variant">
+<div class="absolute top-0 left-0 h-full bg-primary opacity-60" style="width: 45%;"></div>
+</div>
+<div class="w-12 text-right font-code text-code text-on-surface">2.2k</div>
+</div>
+<!-- Bar 4 -->
+<div class="flex items-center gap-sm">
+<div class="w-32 font-code text-code text-on-surface-variant truncate">r/programming</div>
+<div class="flex-1 h-4 bg-surface-container-highest relative border border-outline-variant">
+<div class="absolute top-0 left-0 h-full bg-primary opacity-40" style="width: 30%;"></div>
+</div>
+<div class="w-12 text-right font-code text-code text-on-surface">1.5k</div>
+</div>
+<!-- Bar 5 -->
+<div class="flex items-center gap-sm">
+<div class="w-32 font-code text-code text-on-surface-variant truncate">r/homelab</div>
+<div class="flex-1 h-4 bg-surface-container-highest relative border border-outline-variant">
+<div class="absolute top-0 left-0 h-full bg-primary opacity-20" style="width: 15%;"></div>
+</div>
+<div class="w-12 text-right font-code text-code text-on-surface">800</div>
+</div>
+</div>
+</div>
+<!-- Posts vs Comments -->
+<div class="bg-surface-container border border-outline-variant p-md flex flex-col items-center justify-center">
+<h2 class="font-label-caps text-label-caps text-on-surface border-b border-outline-variant pb-xs mb-md w-full text-left">Posts vs Comments</h2>
+<div class="relative w-32 h-32 rounded-full conic-chart my-auto flex items-center justify-center">
+<div class="w-24 h-24 bg-surface-container rounded-full absolute"></div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="font-code text-code text-primary">65%</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant">COMMENTS</span>
+</div>
+</div>
+<div class="flex w-full justify-between mt-auto pt-md border-t border-outline-variant">
+<div class="flex items-center gap-[4px]">
+<div class="w-2 h-2 bg-primary"></div>
+<span class="font-code text-code text-on-surface-variant">Comments</span>
+</div>
+<div class="flex items-center gap-[4px]">
+<div class="w-2 h-2 bg-surface-container-highest border border-outline-variant"></div>
+<span class="font-code text-code text-on-surface-variant">Posts</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Temporal Density Sparkline -->
+<div class="mt-sm bg-surface-container border border-outline-variant p-md">
+<h2 class="font-label-caps text-label-caps text-on-surface border-b border-outline-variant pb-xs mb-md flex justify-between">
+<span>Temporal Density</span>
+<span class="text-on-surface-variant opacity-50">2018 - 2024</span>
+</h2>
+<div class="h-24 w-full relative flex items-end">
+<!-- Simple purely CSS representation of a sparkline for minimal brutalist feel -->
+<div class="flex-1 h-[10%] bg-primary border-r border-background opacity-20 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[25%] bg-primary border-r border-background opacity-40 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[15%] bg-primary border-r border-background opacity-30 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[60%] bg-primary border-r border-background opacity-80 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[90%] bg-primary border-r border-background opacity-100 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[40%] bg-primary border-r border-background opacity-60 hover:opacity-100 transition-opacity"></div>
+<div class="flex-1 h-[75%] bg-primary opacity-90 hover:opacity-100 transition-opacity"></div>
+<!-- Base line -->
+<div class="absolute bottom-0 left-0 w-full h-[1px] bg-outline-variant"></div>
+</div>
+<div class="flex justify-between mt-[4px] font-code text-[10px] text-on-surface-variant">
+<span>'18</span>
+<span>'19</span>
+<span>'20</span>
+<span>'21</span>
+<span>'22</span>
+<span>'23</span>
+<span>'24</span>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest relative w-full mt-auto border-t border-outline-variant flex justify-between items-center p-md ml-0 md:ml-[300px] z-40">
+<div class="font-code text-code text-on-tertiary-fixed-variant">
+            © 2024 DIGITAL FORENSICS ARCHIVE
+        </div>
+<div class="flex gap-lg font-code text-code">
+<a class="text-on-surface-variant hover:text-on-background transition-colors" href="#">Documentation</a>
+<a class="text-on-surface-variant hover:text-on-background transition-colors" href="#">API</a>
+<a class="text-on-surface-variant hover:text-on-background transition-colors" href="#">Privacy Policy</a>
+</div>
+</footer>
+</body></html>

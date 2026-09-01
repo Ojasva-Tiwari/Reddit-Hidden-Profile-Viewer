@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OSINT_ARCHIVE - Timeline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#001b3e",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "secondary-container": "#0072e3",
+                        "secondary": "#aac7ff",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#690005",
+                        "tertiary": "#bec7d2",
+                        "on-primary-container": "#4e1800",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary": "#002f65",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#ffb598",
+                        "inverse-primary": "#a04010",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-container": "#222b33",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#d7e3ff",
+                        "primary-fixed-dim": "#ffb598",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "on-tertiary-fixed": "#141c24",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#89929c",
+                        "primary-fixed": "#ffdbce",
+                        "surface-container": "#201f1f",
+                        "primary-container": "#e2703e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary": "#591d00",
+                        "tertiary-fixed": "#dae3ee",
+                        "background": "#131313",
+                        "outline-variant": "#57423a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#a58b82",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-surface-variant": "#ddc0b6",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#29313a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "primary": "#ffb598"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-dense": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-base": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+                        "body-dense": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .timeline-line {
+            width: 1px;
+            background-color: #30363D;
+        }
+        .node-active {
+            border: 1px solid #388BFD;
+        }
+        .node-deleted {
+            border: 1px dashed #93000a;
+            background-color: rgba(147, 0, 10, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base min-h-screen antialiased flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-12 h-[calc(100vh-48px)] w-[300px] border-r border-outline-variant flex flex-col py-md gap-xs hidden md:flex z-40">
+<div class="px-md pb-md border-b border-outline-variant mb-sm">
+<div class="flex items-center gap-sm">
+<img class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A highly detailed, stark minimalist system logo. White and grey geometric shapes on a dark charcoal background. The logo looks like a specialized professional data retrieval icon. High contrast, sharp edges, institutional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSwe0ZQy-haoUcXWYZnJ_w1zf91s90YDnyXKVc7Suz92WBfatmfyHPEvPOlr_Kxvyxn-sVvEFOPfUoqO9JfWA_jJpO3ZlyN3Y8d8uN8evnLOiY3WHEAS2BI70v0Plk4aR99NfALgXHjSWf1naqdOgsl7tfl4nx0I9hCcT3G_8dt2RB56WvQBw7P_Az8vDkPvllQ1YpVwsISCgVNUF6CfIHJcbNPDYGnLnQUODjw7FqQFJVwsIkFHw"/>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary dark:text-primary">ARCHIVE_V1</h2>
+<p class="font-code text-code text-on-surface-variant">ID: 992-01-X</p>
+</div>
+</div>
+</div>
+<div class="flex-1 px-sm overflow-y-auto flex flex-col gap-xs">
+<a class="flex items-center gap-md px-sm py-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+<span class="font-body-dense text-body-dense">Posts</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-body-dense text-body-dense">Comments</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-dense text-body-dense">Activity</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded bg-secondary-container text-on-secondary-container border-r-2 border-secondary cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-body-dense text-body-dense font-bold">Timeline</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-body-dense text-body-dense">AI Summary</span>
+</a>
+</div>
+<div class="p-md mt-auto">
+<button class="w-full py-xs px-sm border border-[#30363D] hover:bg-[#21262D] text-on-surface-variant font-label-caps text-label-caps tracking-widest transition-colors rounded">EXPORT DATA</button>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface fixed top-0 w-full z-50 border-b border-outline-variant flex justify-between items-center h-12 px-gutter">
+<div class="flex items-center gap-md">
+<span class="font-label-caps text-label-caps tracking-widest text-primary dark:text-primary">OSINT_ARCHIVE</span>
+</div>
+<div class="flex-1 max-w-md mx-xl hidden md:block">
+<div class="relative flex items-center bg-[#0D1117] border border-[#30363D] rounded-sm px-sm py-xs">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm text-[18px]">search</span>
+<input class="bg-transparent border-none outline-none text-on-surface font-code text-code w-full focus:ring-0 p-0" placeholder="QUERY_TIMELINE..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-xs text-on-surface-variant hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:bg-surface-container-high transition-colors active:opacity-80 transition-opacity rounded">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<img alt="Researcher Profile" class="w-6 h-6 rounded-full ml-sm border border-outline-variant" data-alt="A stark minimalist profile avatar. A silhouette of a head in stark white against a dark deep space black background. Institutional, secure, and professional. 50 words description." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm_pYZrongZn7b3Or9SdooZ-K6tJnYGXoJ1E9cdJ4e5VsaXfqMGmXpGEvxw-2ijPq4o-vjAVbjWJWwEQahg9e-L_6xt0xeUBX6tPT1keZ76cdwD0DENB63YjBU-P2mY11iD8C29EjDaaZ9hTDd68Dqy2kHTDjdxusE2Kl23DS7IvkHpbeMptB8Xd7oP44RxwKj_XeZcTdv583DPna8OHN0D8efCFsiyJaWOjbBD6xdT8g0XerTAVk"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-[48px] md:pl-[300px] w-full min-h-screen flex flex-col">
+<div class="flex-1 p-margin-desktop max-w-[1280px] mx-auto w-full relative flex">
+<!-- Jump to Year Navigation (Sticky) -->
+<div class="w-[100px] shrink-0 sticky top-[72px] h-fit self-start pr-xl hidden lg:flex flex-col gap-md border-r border-[#30363D] mr-xl">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-xs">JUMP TO</span>
+<a class="font-code text-code text-primary hover:text-on-surface transition-colors cursor-pointer" href="#year-2023">2023</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#year-2022">2022</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer" href="#year-2021">2021</a>
+</div>
+<!-- Timeline Flow -->
+<div class="flex-1 relative pb-xl">
+<div class="absolute left-[24px] md:left-[39px] top-0 bottom-0 timeline-line"></div>
+<!-- 2023 -->
+<div class="relative mb-xl scroll-mt-[72px]" id="year-2023">
+<div class="flex items-center gap-md mb-md">
+<div class="w-[48px] md:w-[80px] shrink-0 font-code text-code text-on-surface-variant text-right pr-sm bg-background relative z-10">2023</div>
+<div class="h-px bg-[#30363D] flex-1"></div>
+</div>
+<!-- Node 1 -->
+<div class="relative pl-[60px] md:pl-[100px] mb-lg">
+<div class="absolute left-[20px] md:left-[35px] top-[16px] w-[9px] h-[9px] rounded-full bg-[#1A1A1A] border border-[#30363D] z-10"></div>
+<div class="bg-[#1A1A1A] border border-[#30363D] p-md rounded-sm">
+<div class="flex justify-between items-baseline mb-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Q4 Activity Spike</span>
+<span class="font-code text-code text-on-surface-variant">OCT-DEC</span>
+</div>
+<div class="flex gap-md font-code text-code text-on-surface-variant">
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">article</span> 142 Posts</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">forum</span> 890 Comments</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 2022 -->
+<div class="relative mb-xl scroll-mt-[72px]" id="year-2022">
+<div class="flex items-center gap-md mb-md">
+<div class="w-[48px] md:w-[80px] shrink-0 font-code text-code text-on-surface-variant text-right pr-sm bg-background relative z-10">2022</div>
+<div class="h-px bg-[#30363D] flex-1"></div>
+</div>
+<!-- Node 2 (Deleted) -->
+<div class="relative pl-[60px] md:pl-[100px] mb-lg">
+<div class="absolute left-[20px] md:left-[35px] top-[16px] w-[9px] h-[9px] rounded-full bg-[#1A1A1A] border border-[#93000a] z-10"></div>
+<div class="bg-[#1A1A1A] node-deleted p-md rounded-sm">
+<div class="flex justify-between items-baseline mb-sm">
+<div class="flex items-center gap-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Data Purge Event</span>
+<span class="px-xs py-[2px] rounded text-error bg-error-container font-label-caps text-[9px]">DELETED_MASS</span>
+</div>
+<span class="font-code text-code text-on-surface-variant">AUG 14</span>
+</div>
+<div class="font-code text-code text-error opacity-80">
+                                - 340 Posts removed from primary index.<br/>
+                                - Account privacy settings toggled.
+                            </div>
+</div>
+</div>
+<!-- Node 3 -->
+<div class="relative pl-[60px] md:pl-[100px] mb-lg">
+<div class="absolute left-[20px] md:left-[35px] top-[16px] w-[9px] h-[9px] rounded-full bg-[#1A1A1A] border border-[#30363D] z-10"></div>
+<div class="bg-[#1A1A1A] border border-[#30363D] p-md rounded-sm">
+<div class="flex justify-between items-baseline mb-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Initial Indexing</span>
+<span class="font-code text-code text-on-surface-variant">JAN-FEB</span>
+</div>
+<div class="flex gap-md font-code text-code text-on-surface-variant">
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">article</span> 12 Posts</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest relative w-full mt-auto border-t border-outline-variant flex justify-between items-center p-md">
+<span class="font-code text-code text-on-tertiary-fixed-variant">© 2024 DIGITAL FORENSICS ARCHIVE</span>
+<div class="flex gap-md">
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Documentation</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">API</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Privacy Policy</a>
+</div>
+</footer>
+</main>
+</body></html>

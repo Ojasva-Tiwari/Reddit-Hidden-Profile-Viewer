@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OSINT Archive - Posts Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#001b3e",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "secondary-container": "#0072e3",
+                        "secondary": "#aac7ff",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#690005",
+                        "tertiary": "#bec7d2",
+                        "on-primary-container": "#4e1800",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary": "#002f65",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#ffb598",
+                        "inverse-primary": "#a04010",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-container": "#222b33",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#d7e3ff",
+                        "primary-fixed-dim": "#ffb598",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "on-tertiary-fixed": "#141c24",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#89929c",
+                        "primary-fixed": "#ffdbce",
+                        "surface-container": "#201f1f",
+                        "primary-container": "#e2703e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary": "#591d00",
+                        "tertiary-fixed": "#dae3ee",
+                        "background": "#131313",
+                        "outline-variant": "#57423a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#a58b82",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-surface-variant": "#ddc0b6",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#29313a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "primary": "#ffb598"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-dense": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-base": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+                        "body-dense": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for terminal feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131313;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #57423a;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface fixed top-0 w-full z-50 border-b border-outline-variant flat no shadows">
+<div class="flex justify-between items-center h-12 px-gutter w-full max-w-[1280px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-label-caps tracking-widest text-primary">OSINT_ARCHIVE</span>
+<div class="hidden md:flex bg-[#0D1117] rounded-sm border border-[#30363D] items-center px-2 h-8 w-64 focus-within:border-[#388BFD]">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] mr-2">search</span>
+<input class="bg-transparent border-none outline-none text-on-surface font-code text-code w-full p-0 focus:ring-0" placeholder="Search archive..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors p-1 rounded active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors p-1 rounded active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors p-1 rounded active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="Researcher Profile" class="w-8 h-8 rounded-sm object-cover border border-[#30363D]" data-alt="A small, stylized profile avatar for a researcher or digital archivist, featuring geometric, low-poly shapes in muted blues and grays against a dark background, reflecting a professional and technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfn1DM5p5PhnE80227jpGFbXwmQtOO_JdQbo13G1Wsgm5RRJ2C_vb8ngPKMytO7b0koObShRk8PX6kh2ozTM0mFxbeJrUTaD4KzmvxsLpewFyjCjOrFpfUuNHOMlSap-ereaTCjVyneRLOTkfdaxZwdFJULK80g2S7230v7NpbpecacvtmSRmI9GojQyXG3jezYFmLTTCFl5AfBSUEK4QA0iNXLbiPvdvDdGChdKVW7AlyBrDsirQ"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-12 max-w-[1280px] mx-auto w-full">
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col py-md gap-xs bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-12 h-[calc(100vh-48px)] w-[300px] border-r border-outline-variant flat no shadows z-40">
+<div class="px-md mb-6 mt-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-sm bg-[#1A1A1A] border border-[#30363D] flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]">database</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface m-0">ARCHIVE_V1</h2>
+<span class="font-code text-code text-on-surface-variant block mt-1">ID: 992-01-X</span>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Active Item -->
+<a class="bg-secondary-container text-on-secondary-container border-r-2 border-secondary hover:bg-surface-container-highest transition-all cursor-pointer duration-150 flex items-center gap-3 px-md py-2" href="#">
+<span class="material-symbols-outlined text-[20px]">article</span>
+<span class="font-body-dense text-body-dense">Posts</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 flex items-center gap-3 px-md py-2" href="#">
+<span class="material-symbols-outlined text-[20px]">forum</span>
+<span class="font-body-dense text-body-dense">Comments</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 flex items-center gap-3 px-md py-2" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-body-dense text-body-dense">Activity</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 flex items-center gap-3 px-md py-2" href="#">
+<span class="material-symbols-outlined text-[20px]">timeline</span>
+<span class="font-body-dense text-body-dense">Timeline</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all cursor-pointer duration-150 flex items-center gap-3 px-md py-2 mt-auto mb-2" href="#">
+<span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+<span class="font-body-dense text-body-dense">AI Summary</span>
+</a>
+</nav>
+<div class="px-md mt-auto pb-md border-t border-[#30363D] pt-4">
+<button class="w-full bg-[#D96A38] text-white font-label-caps text-label-caps py-2 rounded-sm hover:opacity-90 transition-opacity">
+                    EXPORT DATA
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[300px] w-full p-4 md:p-6 pb-24">
+<!-- Filter / Sort Bar -->
+<div class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-2 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-16 z-30 shadow-md">
+<div class="flex items-center gap-2">
+<button class="font-label-caps text-label-caps px-3 py-1.5 border-b-2 border-[#388BFD] text-on-surface">ALL</button>
+<button class="font-label-caps text-label-caps px-3 py-1.5 text-on-surface-variant hover:text-on-surface transition-colors">POSTS</button>
+<button class="font-label-caps text-label-caps px-3 py-1.5 text-on-surface-variant hover:text-on-surface transition-colors">COMMENTS</button>
+</div>
+<div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+<div class="flex items-center gap-1 bg-[#0D1117] border border-[#30363D] rounded-sm px-2 py-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">sort</span>
+<select class="bg-transparent border-none outline-none text-on-surface font-code text-code p-0 focus:ring-0 cursor-pointer">
+<option value="new">Newest First</option>
+<option value="old">Oldest First</option>
+<option value="score">Highest Score</option>
+</select>
+</div>
+<div class="flex items-center gap-1 bg-[#0D1117] border border-[#30363D] rounded-sm px-2 py-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">category</span>
+<select class="bg-transparent border-none outline-none text-on-surface font-code text-code p-0 focus:ring-0 cursor-pointer">
+<option value="all">Any Subreddit</option>
+<option value="r1">r/technology</option>
+<option value="r2">r/news</option>
+<option value="r3">r/datahoarder</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Feed Container -->
+<div class="flex flex-col gap-sm">
+<!-- Post Card 1 (Deleted Status) -->
+<article class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 hover:border-[#57423a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="font-code text-code text-tertiary">r/technology</span>
+<span class="text-on-surface-variant text-[10px]">•</span>
+<span class="font-code text-code text-on-surface-variant">Posted by u/deleted</span>
+</div>
+<span class="bg-error-container/30 text-error font-label-caps text-[10px] px-2 py-0.5 rounded-full border border-error/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">delete</span>
+                            DELETED
+                        </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Major data breach reported at undisclosed tech firm; millions affected.</h3>
+<div class="bg-[#0D1117] border border-[#30363D] rounded-sm p-2 mb-3">
+<p class="font-body-dense text-body-dense text-on-surface-variant line-clamp-3">
+                            Sources indicate that a significant exfiltration event occurred last week. The company has yet to release an official statement, but internal memos suggest a sophisticated APT group was involved. We are currently trying to verify the exact scope of the compromised PII. Expecting a full PR drop tomorrow morning.
+                        </p>
+</div>
+<div class="flex items-center justify-between mt-4 pt-3 border-t border-[#30363D]">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+<span class="font-code text-code">14.2k</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+<span class="font-code text-code">892</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code text-code text-on-surface-variant">TS: 2023-10-24T14:32:00Z</span>
+<button class="bg-transparent border border-[#30363D] text-on-surface-variant px-2 py-1 rounded-sm hover:bg-[#21262D] transition-colors font-code text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">open_in_new</span> VIEW ARCHIVE
+                            </button>
+</div>
+</div>
+</article>
+<!-- Post Card 2 (Visible, Media Preview) -->
+<article class="bg-[#1A1A1A] border border-[#30363D] rounded-sm p-3 hover:border-[#57423a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="font-code text-code text-tertiary">r/datahoarder</span>
+<span class="text-on-surface-variant text-[10px]">•</span>
+<span class="font-code text-code text-on-surface-variant">Posted by u/archivist_01</span>
+</div>
+<span class="bg-secondary/10 text-secondary font-label-caps text-[10px] px-2 py-0.5 rounded-full border border-secondary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">visibility</span>
+                            VISIBLE
+                        </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">I managed to grab the dataset before the site went down. Magnet link inside.</h3>
+<!-- Media Preview Area -->
+<div class="relative w-full h-32 md:h-48 bg-[#0D1117] border border-[#30363D] rounded-sm mb-3 overflow-hidden group-hover:border-[#388BFD] transition-colors flex items-center justify-center">
+<div class="absolute inset-0 bg-cover bg-center w-full h-full opacity-40 mix-blend-luminosity" data-alt="A stylized, technical representation of a digital dataset or network graph, featuring glowing interconnected nodes, cascading code snippets, and abstract data visualizations in cool blues and stark white against an extremely dark background, conveying a high-tech, forensic analysis mood." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyl9LafG8grwBe04gCJPteelLGrWJ-CnnCYhreMZ3VTKbcXOd7qH7j-mWQ35-oyYFvaPEeHSpItprqXvoHEKaQuy2K6AB4PJXLQc72Gn1v7oFraFXm1lhcwvuoji-gaq-0Bolprv4pX-jumqQc4fY7lSLuRaboDUyWwg8DIm0XIGLX8Ht3JzPdrjm_Aot8e0iJeveVVnzzPmbs3qR96OeAW5QBo5LtxSvb2u8pWorcOmdm7arfhi4')"></div>
+<div class="z-10 flex flex-col items-center gap-2 bg-[#1A1A1A]/80 backdrop-blur-sm p-3 rounded-sm border border-[#30363D]">
+<span class="material-symbols-outlined text-[32px] text-tertiary">save</span>
+<span class="font-label-caps text-label-caps text-on-surface">ARCHIVED COPY (2.4 GB)</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-4 pt-3 border-t border-[#30363D]">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+<span class="font-code text-code">3.1k</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+<span class="font-code text-code">215</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code text-code text-on-surface-variant">TS: 2023-10-23T09:15:22Z</span>
+<button class="bg-[#21262D] border border-[#30363D] text-on-surface px-2 py-1 rounded-sm hover:bg-[#30363D] transition-colors font-code text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">download</span> GET DATA
+                            </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Footer component integrated at bottom of main content area -->
+<footer class="relative w-full mt-12 border-t border-outline-variant flat no shadows bg-surface-container-lowest dark:bg-surface-container-lowest flex flex-col md:flex-row justify-between items-center p-md gap-4">
+<span class="font-code text-code text-on-tertiary-fixed-variant">© 2024 DIGITAL FORENSICS ARCHIVE</span>
+<div class="flex gap-4">
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Documentation</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">API</a>
+<a class="font-code text-code text-on-surface-variant hover:text-on-background transition-colors opacity-100" href="#">Privacy Policy</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

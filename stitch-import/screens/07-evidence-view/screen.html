@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Evidence View - OSINT_ARCHIVE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#370e00",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#001b3e",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "secondary-container": "#0072e3",
+                        "secondary": "#aac7ff",
+                        "on-secondary-container": "#fefcff",
+                        "on-error": "#690005",
+                        "tertiary": "#bec7d2",
+                        "on-primary-container": "#4e1800",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary": "#002f65",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#ffb598",
+                        "inverse-primary": "#a04010",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary-container": "#222b33",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#d7e3ff",
+                        "primary-fixed-dim": "#ffb598",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "on-tertiary-fixed": "#141c24",
+                        "surface-container-low": "#1c1b1b",
+                        "tertiary-container": "#89929c",
+                        "primary-fixed": "#ffdbce",
+                        "surface-container": "#201f1f",
+                        "primary-container": "#e2703e",
+                        "surface-dim": "#131313",
+                        "error-container": "#93000a",
+                        "on-primary": "#591d00",
+                        "tertiary-fixed": "#dae3ee",
+                        "background": "#131313",
+                        "outline-variant": "#57423a",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#a58b82",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-surface-variant": "#ddc0b6",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "inverse-on-surface": "#313030",
+                        "on-tertiary": "#29313a",
+                        "surface-variant": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "primary": "#ffb598"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "24px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-dense": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-base": ["Inter"],
+                        "code": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+                        "body-dense": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-base": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-base overflow-hidden">
+<!-- Blurred background layer simulating the underlying app -->
+<div class="fixed inset-0 z-0 bg-surface-container opacity-50 blur-sm flex flex-col pt-12">
+<div class="flex-1 flex w-full max-w-7xl mx-auto px-margin-desktop py-lg">
+<div class="w-[300px] border-r border-outline-variant pr-md">
+<!-- Placeholder for sidebar content -->
+</div>
+<div class="flex-1 pl-md">
+<!-- Placeholder for main content -->
+</div>
+</div>
+</div>
+<!-- Overlay Background -->
+<div class="fixed inset-0 bg-[#000000] bg-opacity-80 z-50 flex items-center justify-center p-sm md:p-margin-desktop backdrop-blur-md">
+<!-- Modal Container -->
+<div class="w-full max-w-4xl bg-surface border border-outline-variant rounded shadow-2xl flex flex-col max-h-[921px]">
+<!-- Modal Header -->
+<div class="flex items-center justify-between p-md border-b border-outline-variant bg-surface-container-lowest shrink-0">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="policy">policy</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface m-0">EVIDENCE RECORD</h2>
+<span class="font-code text-code text-outline px-sm py-[2px] bg-surface-container rounded-sm border border-outline-variant">ID: 992-01-X</span>
+</div>
+<button aria-label="Close modal" class="p-[4px] hover:bg-surface-container-high rounded-sm text-on-surface-variant transition-colors group flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Breadcrumb / Context Bar -->
+<div class="px-md py-sm bg-surface-container-low border-b border-outline-variant flex items-center gap-xs font-code text-code text-on-surface-variant shrink-0 overflow-x-auto whitespace-nowrap">
+<span class="hover:text-primary cursor-pointer transition-colors">Insight: Gaming Patterns</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-on-surface font-medium">Evidence Record #1</span>
+</div>
+<!-- Modal Body (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-lg flex flex-col gap-lg bg-surface">
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+<div class="bg-surface-container-low border border-outline-variant p-sm rounded-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">SOURCE</div>
+<div class="font-body-dense text-body-dense text-on-surface flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="reddit">edit</span>
+                            r/starcraft
+                        </div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm rounded-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">TIMESTAMP (UTC)</div>
+<div class="font-code text-code text-on-surface">2023-10-24 14:32:01</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm rounded-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">AUTHOR_ID</div>
+<div class="font-code text-code text-on-surface truncate">u/zerg_rusher_99</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm rounded-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-xs">VERIFICATION_STATUS</div>
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary-container"></div>
+<span class="font-label-caps text-label-caps text-secondary">ARCHIVED</span>
+</div>
+</div>
+</div>
+<!-- Main Content Panel -->
+<div class="border border-outline-variant rounded-sm bg-surface-container-lowest flex flex-col">
+<div class="p-md border-b border-outline-variant bg-surface-container-low flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Optimal APM for Zerg Early Game Macro</h3>
+<div class="font-code text-code text-on-surface-variant flex items-center gap-sm">
+<span>Post ID: t3_xj9k2q</span>
+<span>•</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]" data-icon="thumb_up">thumb_up</span> 1.2k</span>
+<span>•</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]" data-icon="forum">forum</span> 342</span>
+</div>
+</div>
+<span class="font-label-caps text-label-caps bg-[#1A1A1A] border border-outline-variant px-sm py-[2px] rounded-sm text-tertiary">ORIGINAL TEXT</span>
+</div>
+<div class="p-lg font-body-base text-body-base text-on-surface leading-relaxed whitespace-pre-wrap bg-[#0D1117] overflow-x-auto">
+I've been analyzing replays of top Korean GM players, and there's a distinct pattern in APM bursts during the first 3 minutes. It's not just spamming; it's highly rhythmic. 
+
+Specifically, at the 1:45 mark (usually when the first Overlord completes and scouting pathing is adjusted), APM spikes to ~350 for about 4 seconds. This correlates exactly with the timing window to identify early Protoss adept timings. 
+
+If you aren't hitting this rhythm, your macro slips exactly when you need to react. Has anyone else mapped these specific APM burst windows?
+                    </div>
+</div>
+<!-- Technical Analysis / AI Insight mapping -->
+<div class="border-l-2 border-primary pl-md py-sm">
+<h4 class="font-label-caps text-label-caps text-primary mb-sm">AI INSIGHT CORRELATION</h4>
+<p class="font-body-dense text-body-dense text-on-surface-variant">
+                        This text directly substantiates Insight #42 ("Temporal APM clustering indicates specialized macro-awareness in Zerg players"). The specific mention of "1:45 mark" and "~350 APM spike" matches the behavioral anomalies detected in dataset cluster G-7.
+                    </p>
+</div>
+</div>
+<!-- Modal Footer / Actions -->
+<div class="p-md border-t border-outline-variant bg-surface-container-low flex justify-between items-center shrink-0">
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-xs px-sm py-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="content_copy">content_copy</span>
+                    COPY RAW DATA
+                </button>
+<div class="flex gap-sm">
+<button class="px-md py-xs border border-outline-variant text-on-surface font-label-caps text-label-caps rounded-sm hover:bg-surface-container-high transition-colors">
+                        CLOSE
+                    </button>
+<button class="px-md py-xs bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-sm flex items-center gap-xs hover:bg-inverse-primary hover:text-on-primary transition-colors border border-transparent hover:border-outline">
+                        VIEW ARCHIVE RECORD
+                        <span class="material-symbols-outlined text-[16px]" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>
