@@ -28,6 +28,16 @@ export class AIRepository {
     return results[0];
   }
 
+  static async insertInsightsBatch(data: AIInsightInsert[]): Promise<AIInsightSelect[]> {
+    if (data.length === 0) return [];
+    const inserted: AIInsightSelect[] = [];
+    for (const item of data) {
+      const res = await this.insertInsight(item);
+      if (res) inserted.push(res);
+    }
+    return inserted;
+  }
+
   static async findByUserId(userId: string): Promise<AIInsightSelect[]> {
     return db
       .select()
