@@ -82,6 +82,12 @@ export default function TimelinePage({ params }: { params: { username: string } 
         </div>
       </div>
 
+      {/* Archival Coverage Notice */}
+      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
+        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
+        <span>Timeline reflects chronological order preserved in archive. Tie-breaking is deterministic on Reddit Fullname ID.</span>
+      </div>
+
       {/* Timeline Stream */}
       <div className="space-y-lg relative pl-6 md:pl-8 border-l border-outline ml-2 md:ml-4 mt-md">
         {years.map((year) => {
@@ -148,6 +154,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
         <ContentDetailModal
           isOpen={!!selectedEvent}
           onClose={() => setSelectedEvent(null)}
+          type={selectedEvent.type === "POST" ? "POST" : "COMMENT"}
           title={selectedEvent.title}
           author={username}
           subreddit={selectedEvent.subreddit}

@@ -79,6 +79,12 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
         </div>
       </div>
 
+      {/* Archival Coverage Notice */}
+      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
+        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
+        <span>Archive coverage is historical. Records reflect snapshots preserved at time of ingestion.</span>
+      </div>
+
       {/* Filter Toolbar */}
       <Card level={1} density="compact">
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center gap-sm">
@@ -102,7 +108,9 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
               <option value="ALL">All Statuses</option>
               <option value="VISIBLE">Visible Only</option>
               <option value="DELETED">Deleted Only</option>
+              <option value="REMOVED">Removed Only</option>
               <option value="EDITED">Edited Only</option>
+              <option value="DELETED_LATER">Deleted Later</option>
             </Select>
 
             <Select
@@ -218,6 +226,7 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
         <ContentDetailModal
           isOpen={!!selectedComment}
           onClose={() => setSelectedComment(null)}
+          type="COMMENT"
           title={`Comment in r/${selectedComment.subreddit || selectedComment.subredditName || ""}`}
           author={selectedComment.author || selectedComment.authorUsername || username}
           subreddit={selectedComment.subreddit || selectedComment.subredditName || ""}
@@ -227,6 +236,16 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
           status={selectedComment.status}
           score={selectedComment.score}
           currentBody={selectedComment.body}
+          permalink={selectedComment.permalink}
+          parentContext={
+            selectedComment.parentContext
+              ? {
+                  author: selectedComment.parentContext.author,
+                  bodySnippet: selectedComment.parentContext.bodySnippet,
+                  parentId: selectedComment.parentId || selectedComment.parentRedditId,
+                }
+              : undefined
+          }
           provenanceHistory={[
             {
               version: 1,

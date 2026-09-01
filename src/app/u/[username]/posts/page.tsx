@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { MediaStatusBadge } from "@/components/ui/MediaStatusBadge";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
@@ -79,6 +80,12 @@ export default function PostsFeedPage({ params }: { params: { username: string }
         </div>
       </div>
 
+      {/* Archival Coverage Notice */}
+      <div className="p-xs px-sm bg-surface-container border border-outline rounded-sm font-code text-[11px] text-on-surface-variant flex items-center gap-xs">
+        <span className="material-symbols-outlined text-[14px] text-primary">info</span>
+        <span>Archive coverage is historical. Records reflect snapshots preserved at time of ingestion.</span>
+      </div>
+
       {/* Filter & Search Toolbar */}
       <Card level={1} density="compact">
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center gap-sm">
@@ -104,6 +111,7 @@ export default function PostsFeedPage({ params }: { params: { username: string }
               <option value="DELETED">Deleted Only</option>
               <option value="REMOVED">Removed Only</option>
               <option value="EDITED">Edited Only</option>
+              <option value="DELETED_LATER">Deleted Later</option>
             </Select>
 
             <Select
@@ -162,7 +170,12 @@ export default function PostsFeedPage({ params }: { params: { username: string }
                   <span>•</span>
                   <span>{new Date(post.createdUtc).toLocaleDateString()}</span>
                 </div>
-                <StatusBadge status={post.status} size="sm" />
+                <div className="flex items-center gap-xs">
+                  {post.mediaStatus && post.mediaStatus !== "MEDIA_UNAVAILABLE" && (
+                    <MediaStatusBadge status={post.mediaStatus} size="sm" />
+                  )}
+                  <StatusBadge status={post.status} size="sm" />
+                </div>
               </div>
 
               <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
@@ -225,6 +238,7 @@ export default function PostsFeedPage({ params }: { params: { username: string }
         <ContentDetailModal
           isOpen={!!selectedPost}
           onClose={() => setSelectedPost(null)}
+          type="POST"
           title={selectedPost.title}
           author={selectedPost.author || selectedPost.authorUsername || username}
           subreddit={selectedPost.subreddit || selectedPost.subredditName || ""}
@@ -235,6 +249,9 @@ export default function PostsFeedPage({ params }: { params: { username: string }
           score={selectedPost.score}
           numComments={selectedPost.numComments}
           currentBody={selectedPost.selftext}
+          permalink={selectedPost.permalink}
+          mediaStatus={selectedPost.mediaStatus}
+          mediaUrl={selectedPost.url}
           provenanceHistory={[
             {
               version: 1,
