@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   STITCH FORENSIC ARCHIVE DESIGN TOKENS (CSS VARIABLES)
+   ========================================================================== */
+
+:root,
+.dark {
+  --background: #121212;
+  --on-background: #e5e2e1;
+  --surface: #131313;
+  --surface-dim: #131313;
+  --surface-bright: #393939;
+  --surface-variant: #353534;
+  --surface-container-lowest: #0e0e0e;
+  --surface-container-low: #1c1b1b;
+  --surface-container: #201f1f;
+  --surface-container-high: #2a2a2a;
+  --surface-container-highest: #353534;
+  --on-surface: #e5e2e1;
+  --on-surface-variant: #ddc0b6;
+  --inverse-surface: #e5e2e1;
+  --inverse-on-surface: #313030;
+  --outline: #30363d;
+  --outline-variant: #57423a;
+  --primary: #ffb598;
+  --on-primary: #591d00;
+  --primary-container: #e2703e;
+  --on-primary-container: #4e1800;
+  --inverse-primary: #a04010;
+  --secondary: #aac7ff;
+  --on-secondary: #002f65;
+  --secondary-container: #0072e3;
+  --on-secondary-container: #fefcff;
+  --tertiary: #bec7d2;
+  --on-tertiary: #29313a;
+  --tertiary-container: #89929c;
+  --on-tertiary-container: #222b33;
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+
+  /* Semantic status colors */
+  --status-visible: #3fb950;
+  --status-visible-bg: rgba(63, 185, 80, 0.15);
+  --status-deleted: #ffb4ab;
+  --status-deleted-bg: rgba(248, 81, 73, 0.15);
+  --status-removed: #d29922;
+  --status-removed-bg: rgba(210, 153, 34, 0.15);
+  --status-edited: #58a6ff;
+  --status-edited-bg: rgba(88, 166, 255, 0.15);
+  --status-speculative: #bec7d2;
+  --status-speculative-bg: rgba(190, 199, 210, 0.15);
+}
+
+.amoled {
+  --background: #000000;
+  --on-background: #e5e2e1;
+  --surface: #050505;
+  --surface-dim: #000000;
+  --surface-bright: #252525;
+  --surface-variant: #222222;
+  --surface-container-lowest: #000000;
+  --surface-container-low: #0a0a0a;
+  --surface-container: #111111;
+  --surface-container-high: #1c1c1c;
+  --surface-container-highest: #262626;
+  --on-surface: #e5e2e1;
+  --on-surface-variant: #9b9a99;
+  --inverse-surface: #ffffff;
+  --inverse-on-surface: #111111;
+  --outline: #22262c;
+  --outline-variant: #3a322e;
+  --primary: #ffb598;
+  --on-primary: #591d00;
+  --primary-container: #d96a38;
+  --on-primary-container: #ffffff;
+  --inverse-primary: #a04010;
+  --secondary: #8cb4ff;
+  --on-secondary: #00224d;
+  --secondary-container: #005bb7;
+  --on-secondary-container: #ffffff;
+  --tertiary: #bec7d2;
+  --on-tertiary: #29313a;
+  --tertiary-container: #89929c;
+  --on-tertiary-container: #222b33;
+  --error: #ff7b72;
+  --on-error: #590004;
+  --error-container: #7a0008;
+  --on-error-container: #ffdad6;
+
+  /* Semantic status colors */
+  --status-visible: #2ea043;
+  --status-visible-bg: rgba(46, 160, 67, 0.18);
+  --status-deleted: #f85149;
+  --status-deleted-bg: rgba(248, 81, 73, 0.18);
+  --status-removed: #d29922;
+  --status-removed-bg: rgba(210, 153, 34, 0.18);
+  --status-edited: #388bfd;
+  --status-edited-bg: rgba(56, 139, 253, 0.18);
+  --status-speculative: #bec7d2;
+  --status-speculative-bg: rgba(190, 199, 210, 0.18);
+}
+
+.light {
+  --background: #f5f5f5;
+  --on-background: #1f2328;
+  --surface: #ffffff;
+  --surface-dim: #f0f0f0;
+  --surface-bright: #ffffff;
+  --surface-variant: #e8e8e8;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8f9fa;
+  --surface-container: #f1f3f5;
+  --surface-container-high: #e9ecef;
+  --surface-container-highest: #dee2e6;
+  --on-surface: #1f2328;
+  --on-surface-variant: #57606a;
+  --inverse-surface: #24292f;
+  --inverse-on-surface: #f6f8fa;
+  --outline: #d1d5da;
+  --outline-variant: #c4c7c5;
+  --primary: #c25325;
+  --on-primary: #ffffff;
+  --primary-container: #d96a38;
+  --on-primary-container: #ffffff;
+  --inverse-primary: #ffb598;
+  --secondary: #0969da;
+  --on-secondary: #ffffff;
+  --secondary-container: #ddf4ff;
+  --on-secondary-container: #0969da;
+  --tertiary: #57606a;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #eaeef2;
+  --on-tertiary-container: #24292f;
+  --error: #cf222e;
+  --on-error: #ffffff;
+  --error-container: #ffebe9;
+  --on-error-container: #82071e;
+
+  /* Semantic status colors */
+  --status-visible: #1a7f37;
+  --status-visible-bg: #dafbe1;
+  --status-deleted: #cf222e;
+  --status-deleted-bg: #ffebe9;
+  --status-removed: #9a6700;
+  --status-removed-bg: #fff8c5;
+  --status-edited: #0969da;
+  --status-edited-bg: #ddf4ff;
+  --status-speculative: #57606a;
+  --status-speculative-bg: #eaeef2;
+}
+
+/* ==========================================================================
+   GLOBAL RESET & TYPOGRAPHY
+   ========================================================================== */
+
+body {
+  background-color: var(--background);
+  color: var(--on-background);
+  font-family: var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Symbols font icon setup */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+/* Custom terminal scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-container-lowest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-container-highest);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--outline-variant);
+}
