@@ -33,14 +33,14 @@ export function normalizeContentStatus(raw: {
   const isExplicitDeleted = text === "[deleted]";
   const isExplicitRemoved = text === "[removed]" || text.includes("[Removed by Moderator]");
 
-  // 1. Initially Unavailable if no text and no title exists
-  if (!hasText && !raw.title && raw.selftext === undefined && raw.body === undefined) {
-    return "INITIALLY_UNAVAILABLE";
-  }
-
-  // 2. Deleted Later: Body was captured in archival snapshot, but 2nd-pass/metadata flags show deleted later
+  // 1. Deleted Later: Body was captured in archival snapshot, but 2nd-pass/metadata flags show deleted later
   if (raw._meta?.is_deleted && hasText && !isExplicitDeleted && !isExplicitRemoved) {
     return "DELETED_LATER";
+  }
+
+  // 2. Deleted by User
+  if (isExplicitDeleted || (raw._meta?.is_deleted && !hasText)) {
+    return "DELETED";
   }
 
   // 3. Removed by Moderator
@@ -48,9 +48,9 @@ export function normalizeContentStatus(raw: {
     return "REMOVED";
   }
 
-  // 4. Deleted by User
-  if (isExplicitDeleted || (raw._meta?.is_deleted && !hasText)) {
-    return "DELETED";
+  // 4. Initially Unavailable if no text and no title exists
+  if (!hasText && !raw.title && raw.selftext === undefined && raw.body === undefined) {
+    return "INITIALLY_UNAVAILABLE";
   }
 
   // 5. Edited
