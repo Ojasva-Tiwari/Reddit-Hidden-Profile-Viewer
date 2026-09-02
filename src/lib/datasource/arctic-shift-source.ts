@@ -130,6 +130,9 @@ export class ArcticShiftDataSource implements IRedditDataSource {
         return null;
       }
 
+      const samplePost = postsRes.data[0];
+      const sampleComment = commentsRes.data[0];
+
       const samplePostRaw = (samplePost?.rawPayload || {}) as Record<string, any>;
       const sampleCommentRaw = (sampleComment?.rawPayload || {}) as Record<string, any>;
 
@@ -214,13 +217,14 @@ export class ArcticShiftDataSource implements IRedditDataSource {
    */
   async getPosts(options: SearchQueryOptions): Promise<PaginatedResult<RedditPost>> {
     const limit = Math.min(options.limit || 100, 100);
+    const sort = options.sort || "desc";
     const params: Record<string, string | number | undefined> = {
       author: options.author?.trim().replace(/^u\//i, ""),
       subreddit: options.subreddit,
       limit,
       before: options.before,
       after: options.after,
-      sort: options.sort || "desc",
+      sort,
     };
 
     const res = await this.fetchWithRetry<{ data: ArcticShiftPostRaw[] }>("/api/posts/search", params);
@@ -228,12 +232,17 @@ export class ArcticShiftDataSource implements IRedditDataSource {
 
     const posts = rawItems.map(normalizePost);
     const hasMore = rawItems.length === limit;
-    const nextBefore = rawItems.length > 0 ? rawItems[rawItems.length - 1].created_utc : undefined;
+    const lastTimestamp = rawItems.length > 0 ? rawItems[rawItems.length - 1].created_utc : undefined;
+    const nextBefore = sort === "desc" ? lastTimestamp : undefined;
+    const nextAfter = sort === "asc" ? lastTimestamp : undefined;
+    const nextCursor = lastTimestamp;
 
     return {
       data: posts,
       hasMore,
       nextBefore,
+      nextAfter,
+      nextCursor,
       totalFetched: posts.length,
     };
   }
@@ -243,13 +252,14 @@ export class ArcticShiftDataSource implements IRedditDataSource {
    */
   async getComments(options: SearchQueryOptions): Promise<PaginatedResult<RedditComment>> {
     const limit = Math.min(options.limit || 100, 100);
+    const sort = options.sort || "desc";
     const params: Record<string, string | number | undefined> = {
       author: options.author?.trim().replace(/^u\//i, ""),
       subreddit: options.subreddit,
       limit,
       before: options.before,
       after: options.after,
-      sort: options.sort || "desc",
+      sort,
     };
 
     const res = await this.fetchWithRetry<{ data: ArcticShiftCommentRaw[] }>("/api/comments/search", params);
@@ -257,12 +267,17 @@ export class ArcticShiftDataSource implements IRedditDataSource {
 
     const comments = rawItems.map(normalizeComment);
     const hasMore = rawItems.length === limit;
-    const nextBefore = rawItems.length > 0 ? rawItems[rawItems.length - 1].created_utc : undefined;
+    const lastTimestamp = rawItems.length > 0 ? rawItems[rawItems.length - 1].created_utc : undefined;
+    const nextBefore = sort === "desc" ? lastTimestamp : undefined;
+    const nextAfter = sort === "asc" ? lastTimestamp : undefined;
+    const nextCursor = lastTimestamp;
 
     return {
       data: comments,
       hasMore,
       nextBefore,
+      nextAfter,
+      nextCursor,
       totalFetched: comments.length,
     };
   }

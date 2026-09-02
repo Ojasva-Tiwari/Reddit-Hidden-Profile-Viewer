@@ -13,8 +13,11 @@ export const searchUserQuerySchema = z.object({
 });
 
 export const postsQuerySchema = z.object({
-  limit: z.coerce.number().min(1).max(100).default(25),
-  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(50),
+  page: z.coerce.number().min(1).optional(),
+  cursor: z.union([z.string(), z.number()]).optional(),
+  before: z.coerce.number().optional(),
+  after: z.coerce.number().optional(),
   sort: z.enum(["newest", "oldest", "score", "comments"]).default("newest"),
   status: z.enum(["ALL", "VISIBLE", "DELETED", "REMOVED", "EDITED", "DELETED_LATER", "INITIALLY_UNAVAILABLE"]).default("ALL"),
   subreddit: z.string().trim().optional(),
@@ -25,8 +28,11 @@ export const postsQuerySchema = z.object({
 });
 
 export const commentsQuerySchema = z.object({
-  limit: z.coerce.number().min(1).max(100).default(25),
-  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(50),
+  page: z.coerce.number().min(1).optional(),
+  cursor: z.union([z.string(), z.number()]).optional(),
+  before: z.coerce.number().optional(),
+  after: z.coerce.number().optional(),
   sort: z.enum(["newest", "oldest", "score"]).default("newest"),
   status: z.enum(["ALL", "VISIBLE", "DELETED", "REMOVED", "EDITED", "DELETED_LATER", "INITIALLY_UNAVAILABLE"]).default("ALL"),
   subreddit: z.string().trim().optional(),

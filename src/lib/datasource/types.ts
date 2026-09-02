@@ -112,6 +112,8 @@ export interface PaginatedResult<T> {
   data: T[];
   hasMore: boolean;
   nextBefore?: number;
+  nextAfter?: number;
+  nextCursor?: string | number;
   totalFetched: number;
 }
 

@@ -116,6 +116,7 @@ class MockDataSource implements IRedditDataSource {
         createdUtc: new Date("2023-05-11T14:20:00Z"),
         status: "VISIBLE",
         isDistinguished: null,
+        isNsfw: false,
         rawPayload: {},
       },
       {
@@ -129,6 +130,7 @@ class MockDataSource implements IRedditDataSource {
         createdUtc: new Date("2022-04-01T10:00:00Z"),
         status: "EDITED",
         isDistinguished: null,
+        isNsfw: false,
         rawPayload: {},
       },
     ];

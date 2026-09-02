@@ -87,7 +87,7 @@ export function ProfileHeader({ username }: { username: string }) {
                       {profile.totalKarma.toLocaleString()}
                     </strong>{" "}
                     karma
-                  </strong>
+                  </span>
                 ) : profile.linkKarma !== null && profile.linkKarma !== undefined && profile.commentKarma !== null && profile.commentKarma !== undefined ? (
                   <span>
                     <strong className="text-on-surface font-semibold">

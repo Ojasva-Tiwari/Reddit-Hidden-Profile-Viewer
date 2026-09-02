@@ -7,6 +7,9 @@ import { CommentItem, ContentStatus } from "@/types";
 export interface CommentsQueryFilter {
   page?: number;
   limit?: number;
+  cursor?: string | number;
+  before?: number;
+  after?: number;
   sort?: "newest" | "oldest" | "score";
   status?: string;
   subreddit?: string;
@@ -18,10 +21,13 @@ export interface CommentsQueryFilter {
 export interface CommentsQueryResult {
   comments: CommentItem[];
   pagination: {
-    page: number;
+    page?: number;
     limit: number;
     total: number;
     hasMore: boolean;
+    nextCursor?: string | number;
+    nextBefore?: number;
+    nextAfter?: number;
   };
   source: "DATABASE" | "UPSTREAM";
 }
@@ -38,7 +44,7 @@ export class CommentService {
    */
   async queryComments(username: string, filter: CommentsQueryFilter = {}): Promise<CommentsQueryResult> {
     const page = filter.page || 1;
-    const limit = Math.min(filter.limit || 25, 100);
+    const limit = Math.min(filter.limit || 50, 100);
     const offset = (page - 1) * limit;
 
     // 1. Try local PostgreSQL database first
@@ -82,13 +88,17 @@ export class CommentService {
             mappedComments = mappedComments.filter((c) => c.body.toLowerCase().includes(q));
           }
 
+          const hasMore = offset + dbComments.length < totalCount;
+          const nextCursor = hasMore ? String(page + 1) : undefined;
+
           return {
             comments: mappedComments,
             pagination: {
               page,
               limit,
               total: totalCount,
-              hasMore: offset + dbComments.length < totalCount,
+              hasMore,
+              nextCursor,
             },
             source: "DATABASE",
           };
@@ -98,14 +108,38 @@ export class CommentService {
       console.warn(`[CommentService] DB query unavailable: ${dbErr.message}`);
     }
 
-    // 2. Query upstream Arctic Shift
+    // 2. Query upstream Arctic Shift with cursor-based pagination
+    const isAsc = filter.sort === "oldest";
+    let beforeParam: number | undefined;
+    let afterParam: number | undefined;
+
+    if (isAsc) {
+      if (filter.cursor !== undefined) {
+        afterParam = Number(filter.cursor);
+      } else if (filter.after !== undefined) {
+        afterParam = filter.after;
+      } else if (filter.from !== undefined) {
+        afterParam = filter.from;
+      }
+      beforeParam = filter.before !== undefined ? filter.before : filter.to;
+    } else {
+      if (filter.cursor !== undefined) {
+        beforeParam = Number(filter.cursor);
+      } else if (filter.before !== undefined) {
+        beforeParam = filter.before;
+      } else if (filter.to !== undefined) {
+        beforeParam = filter.to;
+      }
+      afterParam = filter.after !== undefined ? filter.after : filter.from;
+    }
+
     const upstreamRes = await this.dataSource.getComments({
       author: username,
       limit,
       subreddit: filter.subreddit,
-      sort: filter.sort === "oldest" ? "asc" : "desc",
-      before: filter.to,
-      after: filter.from,
+      sort: isAsc ? "asc" : "desc",
+      before: beforeParam,
+      after: afterParam,
     });
 
     let items = upstreamRes.data.map(CommentService.toCommentItem);
@@ -119,13 +153,19 @@ export class CommentService {
       items = items.filter((c) => c.body.toLowerCase().includes(q));
     }
 
+    const hasMore = upstreamRes.hasMore && upstreamRes.data.length > 0;
+    const nextCursor = hasMore ? upstreamRes.nextCursor : undefined;
+
     return {
       comments: items,
       pagination: {
         page,
         limit,
         total: items.length,
-        hasMore: upstreamRes.hasMore,
+        hasMore,
+        nextCursor,
+        nextBefore: upstreamRes.nextBefore,
+        nextAfter: upstreamRes.nextAfter,
       },
       source: "UPSTREAM",
     };

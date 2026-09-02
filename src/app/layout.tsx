@@ -6,6 +6,8 @@ import { TopNavBar } from "@/components/layout/TopNavBar";
 import { GlobalFooter } from "@/components/layout/GlobalFooter";
 import { DecorativeMascot } from "@/components/layout/DecorativeMascot";
 
+import { QueryProvider } from "@/components/providers/QueryProvider";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -57,15 +59,17 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-background text-on-background min-h-screen flex flex-col antialiased transition-colors relative`}>
-        <ThemeProvider>
-          <TopNavBar />
-          {/* Shared Decorative Mascot across all pages */}
-          <DecorativeMascot />
-          <div className="flex-1 flex flex-col relative z-10">
-            {children}
-          </div>
-          <GlobalFooter />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <TopNavBar />
+            {/* Shared Decorative Mascot across all pages */}
+            <DecorativeMascot />
+            <div className="flex-1 flex flex-col relative z-10">
+              {children}
+            </div>
+            <GlobalFooter />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

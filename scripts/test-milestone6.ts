@@ -83,6 +83,7 @@ class MockRedditDataSource implements IRedditDataSource {
           createdUtc: new Date("2023-01-02T10:00:00Z"),
           status: "VISIBLE",
           isDistinguished: null,
+          isNsfw: false,
         },
         {
           redditId: "t1_com2",
@@ -95,6 +96,7 @@ class MockRedditDataSource implements IRedditDataSource {
           createdUtc: new Date("2023-04-10T08:00:00Z"),
           status: "VISIBLE",
           isDistinguished: null,
+          isNsfw: false,
         },
       ],
       totalFetched: 2,

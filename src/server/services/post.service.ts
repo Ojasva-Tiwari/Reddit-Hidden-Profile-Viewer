@@ -7,6 +7,9 @@ import { PostItem, ContentStatus } from "@/types";
 export interface PostsQueryFilter {
   page?: number;
   limit?: number;
+  cursor?: string | number;
+  before?: number;
+  after?: number;
   sort?: "newest" | "oldest" | "score" | "comments";
   status?: string;
   subreddit?: string;
@@ -19,10 +22,13 @@ export interface PostsQueryFilter {
 export interface PostsQueryResult {
   posts: PostItem[];
   pagination: {
-    page: number;
+    page?: number;
     limit: number;
     total: number;
     hasMore: boolean;
+    nextCursor?: string | number;
+    nextBefore?: number;
+    nextAfter?: number;
   };
   source: "DATABASE" | "UPSTREAM";
 }
@@ -39,7 +45,7 @@ export class PostService {
    */
   async queryPosts(username: string, filter: PostsQueryFilter = {}): Promise<PostsQueryResult> {
     const page = filter.page || 1;
-    const limit = Math.min(filter.limit || 25, 100);
+    const limit = Math.min(filter.limit || 50, 100);
     const offset = (page - 1) * limit;
 
     // 1. Try fetching from local database if author exists in DB
@@ -88,13 +94,17 @@ export class PostService {
             );
           }
 
+          const hasMore = offset + dbPosts.length < totalCount;
+          const nextCursor = hasMore ? String(page + 1) : undefined;
+
           return {
             posts: mappedPosts,
             pagination: {
               page,
               limit,
               total: totalCount,
-              hasMore: offset + dbPosts.length < totalCount,
+              hasMore,
+              nextCursor,
             },
             source: "DATABASE",
           };
@@ -104,14 +114,38 @@ export class PostService {
       console.warn(`[PostService] DB query unavailable: ${dbErr.message}`);
     }
 
-    // 2. Fetch live from Arctic Shift
+    // 2. Fetch live from Arctic Shift with cursor-based pagination
+    const isAsc = filter.sort === "oldest";
+    let beforeParam: number | undefined;
+    let afterParam: number | undefined;
+
+    if (isAsc) {
+      if (filter.cursor !== undefined) {
+        afterParam = Number(filter.cursor);
+      } else if (filter.after !== undefined) {
+        afterParam = filter.after;
+      } else if (filter.from !== undefined) {
+        afterParam = filter.from;
+      }
+      beforeParam = filter.before !== undefined ? filter.before : filter.to;
+    } else {
+      if (filter.cursor !== undefined) {
+        beforeParam = Number(filter.cursor);
+      } else if (filter.before !== undefined) {
+        beforeParam = filter.before;
+      } else if (filter.to !== undefined) {
+        beforeParam = filter.to;
+      }
+      afterParam = filter.after !== undefined ? filter.after : filter.from;
+    }
+
     const upstreamRes = await this.dataSource.getPosts({
       author: username,
       limit,
       subreddit: filter.subreddit,
-      sort: filter.sort === "oldest" ? "asc" : "desc",
-      before: filter.to,
-      after: filter.from,
+      sort: isAsc ? "asc" : "desc",
+      before: beforeParam,
+      after: afterParam,
     });
 
     let items = upstreamRes.data.map(PostService.toPostItem);
@@ -136,13 +170,19 @@ export class PostService {
       items = items.filter((p) => p.mediaStatus !== "MEDIA_AVAILABLE" && p.mediaStatus !== "THUMBNAIL_AVAILABLE");
     }
 
+    const hasMore = upstreamRes.hasMore && upstreamRes.data.length > 0;
+    const nextCursor = hasMore ? upstreamRes.nextCursor : undefined;
+
     return {
       posts: items,
       pagination: {
         page,
         limit,
         total: items.length,
-        hasMore: upstreamRes.hasMore,
+        hasMore,
+        nextCursor,
+        nextBefore: upstreamRes.nextBefore,
+        nextAfter: upstreamRes.nextAfter,
       },
       source: "UPSTREAM",
     };

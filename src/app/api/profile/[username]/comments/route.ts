@@ -29,6 +29,9 @@ export async function GET(
   const queryObj = {
     limit: searchParams.get("limit") || undefined,
     page: searchParams.get("page") || undefined,
+    cursor: searchParams.get("cursor") || undefined,
+    before: searchParams.get("before") || undefined,
+    after: searchParams.get("after") || undefined,
     sort: searchParams.get("sort") || undefined,
     status: searchParams.get("status") || undefined,
     subreddit: searchParams.get("subreddit") || undefined,
