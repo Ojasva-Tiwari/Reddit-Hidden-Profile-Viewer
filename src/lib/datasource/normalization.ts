@@ -176,7 +176,7 @@ export function normalizePost(raw: ArcticShiftPostRaw): RedditPost {
     editedUtc,
     status,
     mediaStatus,
-    isNsfw: Boolean(raw.over_18),
+    isNsfw: Boolean(raw.over_18 || raw.subreddit_over_18 || raw.subreddit_is_nsfw || raw.is_nsfw),
     isSpoiler: Boolean(raw.spoiler),
     isLocked: Boolean(raw.locked),
     rawPayload: raw,
@@ -213,6 +213,7 @@ export function normalizeComment(raw: ArcticShiftCommentRaw): RedditComment {
     editedUtc,
     status,
     isDistinguished: raw.distinguished || null,
+    isNsfw: Boolean(raw.over_18 || raw.subreddit_over_18 || raw.subreddit_is_nsfw || raw.is_nsfw),
     rawPayload: raw,
   };
 }

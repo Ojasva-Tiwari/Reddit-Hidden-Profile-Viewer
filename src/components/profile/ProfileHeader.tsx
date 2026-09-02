@@ -79,25 +79,64 @@ export function ProfileHeader({ username }: { username: string }) {
 
             {/* Quick stats pills */}
             <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant mt-1">
-              {profile?.totalKarma !== undefined && (
-                <span>
-                  <strong className="text-on-surface font-semibold">
-                    {profile.totalKarma.toLocaleString()}
-                  </strong>{" "}
-                  karma
-                </span>
-              )}
+              {/* Karma Display */}
+              {profile ? (
+                profile.totalKarma !== null && profile.totalKarma !== undefined ? (
+                  <span>
+                    <strong className="text-on-surface font-semibold">
+                      {profile.totalKarma.toLocaleString()}
+                    </strong>{" "}
+                    karma
+                  </strong>
+                ) : profile.linkKarma !== null && profile.linkKarma !== undefined && profile.commentKarma !== null && profile.commentKarma !== undefined ? (
+                  <span>
+                    <strong className="text-on-surface font-semibold">
+                      {profile.linkKarma.toLocaleString()}
+                    </strong>{" "}
+                    post •{" "}
+                    <strong className="text-on-surface font-semibold">
+                      {profile.commentKarma.toLocaleString()}
+                    </strong>{" "}
+                    comment karma
+                  </span>
+                ) : (
+                  <span className="text-on-surface-variant/80">Karma unavailable</span>
+                )
+              ) : null}
+
+              {/* Account Creation Date vs Join date unavailable */}
+              {profile ? (
+                <>
+                  <span>•</span>
+                  {profile.createdUtc ? (
+                    <span>
+                      Joined{" "}
+                      <strong className="text-on-surface font-semibold">
+                        {new Date(profile.createdUtc).toLocaleDateString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </strong>
+                    </span>
+                  ) : (
+                    <span className="text-on-surface-variant/80">Join date unavailable</span>
+                  )}
+                </>
+              ) : null}
+
+              {/* Archive Observation Bounds (distinct from Account Creation Date) */}
               {profile?.firstSeenUtc && (
                 <>
                   <span>•</span>
-                  <span>
-                    First seen{" "}
+                  <span title="First observed in archival records">
+                    First archived{" "}
                     <strong className="text-on-surface font-semibold">
                       {new Date(profile.firstSeenUtc).getFullYear()}
                     </strong>
                   </span>
                 </>
               )}
+
               {profile?.lastSeenUtc && (
                 <>
                   <span>•</span>

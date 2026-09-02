@@ -48,6 +48,10 @@ export class ProfileService {
     try {
       const cached = await UserRepository.findByUsername(cleanUsername);
       if (cached) {
+        const accountAgeYears = cached.createdUtc
+          ? Math.floor((Date.now() - cached.createdUtc.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+          : null;
+
         return {
           success: true,
           user: {
@@ -55,12 +59,13 @@ export class ProfileService {
             redditId: cached.redditId || undefined,
             username: cached.username,
             avatarUrl: cached.avatarUrl,
-            createdUtc: cached.createdUtc ? cached.createdUtc.toISOString() : new Date().toISOString(),
+            createdUtc: cached.createdUtc ? cached.createdUtc.toISOString() : null,
+            accountAgeYears,
             firstSeenUtc: cached.firstSeenUtc ? cached.firstSeenUtc.toISOString() : undefined,
             lastSeenUtc: cached.lastSeenUtc ? cached.lastSeenUtc.toISOString() : undefined,
-            totalKarma: cached.totalKarma,
-            linkKarma: cached.linkKarma,
-            commentKarma: cached.commentKarma,
+            totalKarma: cached.totalKarma ?? null,
+            linkKarma: cached.linkKarma ?? null,
+            commentKarma: cached.commentKarma ?? null,
             isSuspended: cached.isSuspended,
             isDeleted: cached.isDeleted,
             syncStatus: cached.syncStatus as SyncStatus,
@@ -99,9 +104,9 @@ export class ProfileService {
           createdUtc: upstreamUser.createdUtc,
           firstSeenUtc: upstreamUser.firstSeenUtc,
           lastSeenUtc: upstreamUser.lastSeenUtc,
-          totalKarma: upstreamUser.totalKarma,
-          linkKarma: upstreamUser.linkKarma,
-          commentKarma: upstreamUser.commentKarma,
+          totalKarma: upstreamUser.totalKarma ?? null,
+          linkKarma: upstreamUser.linkKarma ?? null,
+          commentKarma: upstreamUser.commentKarma ?? null,
           isSuspended: upstreamUser.isSuspended,
           isDeleted: upstreamUser.isDeleted,
           syncStatus: "PENDING",
@@ -112,6 +117,10 @@ export class ProfileService {
         console.warn(`[ProfileService] Could not persist user to DB: ${persistErr.message}`);
       }
 
+      const accountAgeYears = upstreamUser.createdUtc
+        ? Math.floor((Date.now() - upstreamUser.createdUtc.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+        : null;
+
       return {
         success: true,
         user: {
@@ -119,12 +128,13 @@ export class ProfileService {
           redditId: upstreamUser.redditId,
           username: upstreamUser.username,
           avatarUrl: upstreamUser.avatarUrl,
-          createdUtc: upstreamUser.createdUtc ? upstreamUser.createdUtc.toISOString() : new Date().toISOString(),
+          createdUtc: upstreamUser.createdUtc ? upstreamUser.createdUtc.toISOString() : null,
+          accountAgeYears,
           firstSeenUtc: upstreamUser.firstSeenUtc ? upstreamUser.firstSeenUtc.toISOString() : undefined,
           lastSeenUtc: upstreamUser.lastSeenUtc ? upstreamUser.lastSeenUtc.toISOString() : undefined,
-          totalKarma: upstreamUser.totalKarma,
-          linkKarma: upstreamUser.linkKarma,
-          commentKarma: upstreamUser.commentKarma,
+          totalKarma: upstreamUser.totalKarma ?? null,
+          linkKarma: upstreamUser.linkKarma ?? null,
+          commentKarma: upstreamUser.commentKarma ?? null,
           isSuspended: upstreamUser.isSuspended,
           isDeleted: upstreamUser.isDeleted,
           syncStatus: "PENDING",

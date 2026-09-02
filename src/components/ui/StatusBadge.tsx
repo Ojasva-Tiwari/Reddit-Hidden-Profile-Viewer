@@ -118,3 +118,25 @@ export function ClassificationBadge({ classification, className }: Classificatio
     </span>
   );
 }
+
+interface NsfwBadgeProps {
+  className?: string;
+  size?: "sm" | "md";
+}
+
+export function NsfwBadge({ className, size = "sm" }: NsfwBadgeProps) {
+  const sizeStyles = size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-[11px]";
+
+  return (
+    <span
+      className={clsx(
+        "inline-flex items-center font-bold rounded-md border text-rose-400 bg-rose-500/10 border-rose-500/25 tracking-wide uppercase select-none",
+        sizeStyles,
+        className
+      )}
+      title="18+ Adult / NSFW Content"
+    >
+      18+
+    </span>
+  );
+}

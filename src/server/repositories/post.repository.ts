@@ -28,6 +28,7 @@ export class PostRepository {
           editedUtc: data.editedUtc,
           status: data.status,
           mediaStatus: data.mediaStatus,
+          isNsfw: data.isNsfw,
           updatedAt: new Date(),
         },
       })

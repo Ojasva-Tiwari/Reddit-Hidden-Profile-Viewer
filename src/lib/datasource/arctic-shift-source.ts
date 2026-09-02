@@ -130,31 +130,76 @@ export class ArcticShiftDataSource implements IRedditDataSource {
         return null;
       }
 
-      const samplePost = postsRes.data[0];
-      const sampleComment = commentsRes.data[0];
+      const samplePostRaw = (samplePost?.rawPayload || {}) as Record<string, any>;
+      const sampleCommentRaw = (sampleComment?.rawPayload || {}) as Record<string, any>;
 
       const redditId = samplePost?.authorRedditId || sampleComment?.authorRedditId;
       const avatarUrl =
         (sampleComment?.rawPayload as ArcticShiftCommentRaw)?.profile_img || null;
 
-      // Extract first/last seen timestamps from available records
+      // Extract verified upstream karma if explicitly present in upstream payload
+      const upstreamTotalKarma =
+        typeof samplePostRaw.author_karma === "number"
+          ? samplePostRaw.author_karma
+          : typeof sampleCommentRaw.author_karma === "number"
+          ? sampleCommentRaw.author_karma
+          : typeof samplePostRaw.total_karma === "number"
+          ? samplePostRaw.total_karma
+          : typeof sampleCommentRaw.total_karma === "number"
+          ? sampleCommentRaw.total_karma
+          : null;
+
+      const upstreamLinkKarma =
+        typeof samplePostRaw.author_link_karma === "number"
+          ? samplePostRaw.author_link_karma
+          : typeof sampleCommentRaw.author_link_karma === "number"
+          ? sampleCommentRaw.author_link_karma
+          : typeof samplePostRaw.link_karma === "number"
+          ? samplePostRaw.link_karma
+          : null;
+
+      const upstreamCommentKarma =
+        typeof samplePostRaw.author_comment_karma === "number"
+          ? samplePostRaw.author_comment_karma
+          : typeof sampleCommentRaw.author_comment_karma === "number"
+          ? sampleCommentRaw.author_comment_karma
+          : typeof sampleCommentRaw.comment_karma === "number"
+          ? sampleCommentRaw.comment_karma
+          : null;
+
+      // Extract verified account creation timestamp if provided by upstream source
+      const upstreamCreatedEpoch =
+        typeof samplePostRaw.author_created_utc === "number"
+          ? samplePostRaw.author_created_utc
+          : typeof sampleCommentRaw.author_created_utc === "number"
+          ? sampleCommentRaw.author_created_utc
+          : typeof samplePostRaw.account_created_utc === "number"
+          ? samplePostRaw.account_created_utc
+          : typeof sampleCommentRaw.account_created_utc === "number"
+          ? sampleCommentRaw.account_created_utc
+          : null;
+
+      const createdUtc = upstreamCreatedEpoch ? new Date(upstreamCreatedEpoch * 1000) : null;
+
+      // Extract archive observation bounds (strictly first_seen and last_seen in archive, NOT account creation)
       const dates = [
         samplePost ? samplePost.createdUtc.getTime() : null,
         sampleComment ? sampleComment.createdUtc.getTime() : null,
       ].filter((d): d is number => d !== null);
 
+      const earliestTime = dates.length > 0 ? new Date(Math.min(...dates)) : null;
       const latestTime = dates.length > 0 ? new Date(Math.max(...dates)) : null;
 
       return {
         redditId,
         username: cleanUsername,
         avatarUrl,
-        createdUtc: null, // Exact registration date is populated from user lookup or estimated
-        firstSeenUtc: latestTime,
-        lastSeenUtc: latestTime,
-        totalKarma: 0,
-        linkKarma: 0,
-        commentKarma: 0,
+        createdUtc, // Actual Reddit registration timestamp if provided by upstream, otherwise null
+        firstSeenUtc: earliestTime, // First observed in archive coverage
+        lastSeenUtc: latestTime, // Last observed in archive coverage
+        totalKarma: upstreamTotalKarma,
+        linkKarma: upstreamLinkKarma,
+        commentKarma: upstreamCommentKarma,
         isSuspended: false,
         isDeleted: false,
       };

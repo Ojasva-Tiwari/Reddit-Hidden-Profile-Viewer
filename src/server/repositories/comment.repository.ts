@@ -25,6 +25,7 @@ export class CommentRepository {
           score: data.score,
           editedUtc: data.editedUtc,
           status: data.status,
+          isNsfw: data.isNsfw,
           updatedAt: new Date(),
         },
       })

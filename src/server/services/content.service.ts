@@ -18,6 +18,7 @@ export interface ContentDetailResult {
   status: ContentStatus;
   mediaStatus?: MediaStatus;
   mediaUrl?: string;
+  isNsfw?: boolean;
   parentContext?: {
     parentId: string;
     postRedditId?: string;
@@ -62,6 +63,7 @@ export class ContentService {
             status: post.status as ContentStatus,
             mediaStatus: post.mediaStatus,
             mediaUrl: post.url || undefined,
+            isNsfw: post.isNsfw,
             provenanceHistory: [
               {
                 version: 1,
@@ -90,6 +92,7 @@ export class ContentService {
             createdUtc: comment.createdUtc.toISOString(),
             editedUtc: comment.editedUtc ? comment.editedUtc.toISOString() : undefined,
             status: comment.status as ContentStatus,
+            isNsfw: comment.isNsfw,
             parentContext: {
               parentId: comment.parentId,
               postRedditId: comment.postRedditId,

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { StatusBadge, NsfwBadge } from "@/components/ui/StatusBadge";
 import { LoadingState, ErrorState, EmptyState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
 import { TimelineEvent } from "@/types";
@@ -102,6 +102,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
                     <div className="flex items-center justify-between text-xs text-on-surface-variant">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-primary">r/{ev.subreddit}</span>
+                        {ev.isNsfw && <NsfwBadge size="sm" />}
                         <span>•</span>
                         <span className="capitalize">{ev.type.toLowerCase()}</span>
                         <span>•</span>
@@ -149,6 +150,7 @@ export default function TimelinePage({ params }: { params: { username: string } 
           status={selectedEvent.status}
           score={selectedEvent.score}
           currentBody={selectedEvent.snippet}
+          isNsfw={selectedEvent.isNsfw}
           provenanceHistory={[
             {
               version: 1,

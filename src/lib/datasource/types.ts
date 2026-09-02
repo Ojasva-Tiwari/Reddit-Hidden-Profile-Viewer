@@ -14,9 +14,9 @@ export interface RedditUser {
   createdUtc?: Date | null;
   firstSeenUtc?: Date | null;
   lastSeenUtc?: Date | null;
-  totalKarma: number;
-  linkKarma: number;
-  commentKarma: number;
+  totalKarma?: number | null;
+  linkKarma?: number | null;
+  commentKarma?: number | null;
   isSuspended: boolean;
   isDeleted: boolean;
   rawPayload?: Record<string, any>;
@@ -62,6 +62,7 @@ export interface RedditComment {
   editedUtc?: Date | null;
   status: ContentStatus;
   isDistinguished?: string | null;
+  isNsfw: boolean;
   rawPayload?: Record<string, any>;
 }
 

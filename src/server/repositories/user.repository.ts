@@ -35,6 +35,7 @@ export class UserRepository {
         set: {
           redditId: data.redditId ?? sql`users.reddit_id`,
           avatarUrl: data.avatarUrl ?? sql`users.avatar_url`,
+          createdUtc: data.createdUtc ?? sql`users.created_utc`,
           totalKarma: data.totalKarma ?? sql`users.total_karma`,
           linkKarma: data.linkKarma ?? sql`users.link_karma`,
           commentKarma: data.commentKarma ?? sql`users.comment_karma`,

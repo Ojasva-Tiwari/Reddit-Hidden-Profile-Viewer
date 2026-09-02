@@ -74,7 +74,7 @@ export default function ActivityOverviewPage({ params }: { params: { username: s
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-primary">r/{sub.name}</span>
                   <span className="text-xs text-on-surface-variant font-medium">
-                    {sub.count} items ({sub.percentage}%) • {sub.score.toLocaleString()} karma
+                    {sub.count} items ({sub.percentage}%) • {sub.score.toLocaleString()} score
                   </span>
                 </div>
                 <div className="w-full bg-surface-container h-2.5 rounded-full overflow-hidden border border-outline/30">

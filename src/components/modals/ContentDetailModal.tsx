@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { StatusBadge, ContentStatusType } from "@/components/ui/StatusBadge";
+import { StatusBadge, NsfwBadge, ContentStatusType } from "@/components/ui/StatusBadge";
 import { ProvenanceViewer, ProvenanceVersion } from "@/components/ui/ProvenanceViewer";
 import { MediaReferenceViewer } from "@/components/ui/MediaReferenceViewer";
 import { Button } from "@/components/ui/Button";
@@ -25,6 +25,7 @@ export interface ContentDetailModalProps {
   mediaStatus?: MediaStatus;
   mediaUrl?: string | null;
   thumbnailUrl?: string | null;
+  isNsfw?: boolean;
   parentContext?: {
     author?: string;
     bodySnippet?: string;
@@ -52,6 +53,7 @@ export function ContentDetailModal({
   mediaStatus,
   mediaUrl,
   thumbnailUrl,
+  isNsfw,
   parentContext,
   provenanceHistory = [],
 }: ContentDetailModalProps) {
@@ -82,6 +84,7 @@ export function ContentDetailModal({
         <div className="px-6 py-4 border-b border-outline/40 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-on-surface-variant">
             <span className="font-semibold text-primary">r/{subreddit}</span>
+            {isNsfw && <NsfwBadge size="sm" />}
             <span>•</span>
             <span>u/{author}</span>
             <span>•</span>

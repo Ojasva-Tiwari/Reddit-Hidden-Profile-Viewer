@@ -43,13 +43,13 @@ export interface UserProfile {
   redditId?: string;
   username: string;
   avatarUrl?: string | null;
-  createdUtc: string;
-  accountAgeYears?: number;
-  firstSeenUtc?: string;
-  lastSeenUtc?: string;
-  totalKarma: number;
-  linkKarma: number;
-  commentKarma: number;
+  createdUtc?: string | null;
+  accountAgeYears?: number | null;
+  firstSeenUtc?: string | null;
+  lastSeenUtc?: string | null;
+  totalKarma?: number | null;
+  linkKarma?: number | null;
+  commentKarma?: number | null;
   isSuspended?: boolean;
   isDeleted?: boolean;
   syncStatus: SyncStatus;
@@ -101,6 +101,7 @@ export interface CommentItem {
   body: string;
   permalink?: string;
   isDistinguished?: string;
+  isNsfw?: boolean;
   parentContext?: {
     author: string;
     bodySnippet: string;
@@ -125,6 +126,7 @@ export interface TimelineEvent {
   snippet: string;
   score: number;
   redditId: string;
+  isNsfw?: boolean;
 }
 
 export interface AIInsight {

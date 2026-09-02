@@ -74,6 +74,7 @@ export class CommentService {
             editedUtc: c.editedUtc ? c.editedUtc.toISOString() : undefined,
             status: c.status as ContentStatus,
             isDistinguished: c.isDistinguished || undefined,
+            isNsfw: c.isNsfw,
           }));
 
           if (filter.search) {
@@ -159,6 +160,7 @@ export class CommentService {
         editedUtc: comment.editedUtc,
         status: comment.status,
         isDistinguished: comment.isDistinguished,
+        isNsfw: comment.isNsfw,
         rawPayload: comment.rawPayload,
       }));
 
@@ -195,6 +197,7 @@ export class CommentService {
       editedUtc: comment.editedUtc ? comment.editedUtc.toISOString() : undefined,
       status: comment.status,
       isDistinguished: comment.isDistinguished || undefined,
+      isNsfw: comment.isNsfw,
     };
   }
 }

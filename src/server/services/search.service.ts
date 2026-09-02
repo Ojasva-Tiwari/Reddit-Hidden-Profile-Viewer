@@ -7,7 +7,7 @@ export interface SearchUserResult {
   username: string;
   redditId?: string;
   avatarUrl?: string | null;
-  totalKarma: number;
+  totalKarma?: number | null;
   syncStatus: string;
   historicalRecordsFound: boolean;
   lastSyncedAt?: string;

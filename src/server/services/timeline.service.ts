@@ -56,6 +56,7 @@ export class TimelineService {
         status: post.status,
         snippet: post.selftext ? post.selftext.substring(0, 140) + "..." : post.title,
         score: post.score,
+        isNsfw: post.isNsfw,
       });
     }
 
@@ -79,6 +80,7 @@ export class TimelineService {
         status: comment.status,
         snippet: comment.body.substring(0, 140) + "...",
         score: comment.score,
+        isNsfw: comment.isNsfw,
       });
     }
 

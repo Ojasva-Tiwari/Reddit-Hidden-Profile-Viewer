@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { StatusBadge, NsfwBadge } from "@/components/ui/StatusBadge";
 import { MediaStatusBadge } from "@/components/ui/MediaStatusBadge";
 import { LoadingState, EmptyState, ErrorState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
@@ -150,6 +150,7 @@ export default function PostsFeedPage({ params }: { params: { username: string }
                     <span className="font-semibold text-primary">
                       r/{post.subreddit || post.subredditName}
                     </span>
+                    {post.isNsfw && <NsfwBadge size="sm" />}
                     <span>•</span>
                     <span>{new Date(post.createdUtc).toLocaleDateString()}</span>
                   </div>
@@ -254,6 +255,7 @@ export default function PostsFeedPage({ params }: { params: { username: string }
           permalink={selectedPost.permalink}
           mediaStatus={selectedPost.mediaStatus}
           mediaUrl={selectedPost.url}
+          isNsfw={selectedPost.isNsfw}
           provenanceHistory={[
             {
               version: 1,

@@ -124,6 +124,7 @@ class MockProductionDataSource implements IRedditDataSource {
         createdUtc: new Date("2023-01-02T10:00:00Z"),
         status: "EDITED",
         isDistinguished: null,
+        isNsfw: false,
       },
       {
         redditId: "t1_com2",
@@ -136,6 +137,7 @@ class MockProductionDataSource implements IRedditDataSource {
         createdUtc: new Date("2021-05-10T08:00:00Z"),
         status: "DELETED",
         isDistinguished: null,
+        isNsfw: false,
       },
     ];
 

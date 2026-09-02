@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { StatusBadge, NsfwBadge } from "@/components/ui/StatusBadge";
 import { LoadingState, EmptyState, ErrorState } from "@/components/ui/StateDisplays";
 import { ContentDetailModal } from "@/components/modals/ContentDetailModal";
 import { CommentItem } from "@/types";
@@ -145,6 +145,7 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
                   <span className="font-semibold text-primary">
                     r/{c.subreddit || c.subredditName}
                   </span>
+                  {c.isNsfw && <NsfwBadge size="sm" />}
                   <span>•</span>
                   <span>{new Date(c.createdUtc).toLocaleDateString()}</span>
                 </div>
@@ -224,6 +225,7 @@ export default function CommentsFeedPage({ params }: { params: { username: strin
           score={selectedComment.score}
           currentBody={selectedComment.body}
           permalink={selectedComment.permalink}
+          isNsfw={selectedComment.isNsfw}
           parentContext={
             selectedComment.parentContext
               ? {
