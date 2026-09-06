@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { defaultGeminiClient, GeminiClient } from "@/lib/ai/gemini";
 import { defaultPostService, PostService } from "./post.service";
 import { defaultCommentService, CommentService } from "./comment.service";
@@ -12,6 +13,64 @@ export interface AISummaryResult {
   data?: ProfileSummaryOutput;
   sourceOrigin: "DATABASE_CACHE" | "GEMINI_GENERATION";
   evidenceMap?: Record<string, CompactEvidenceRecord>;
+}
+
+interface CacheRecord {
+  result: AISummaryResult;
+  fingerprint: string;
+  createdAt: number;
+}
+
+// In-memory deterministic cache: 1 hour TTL, max 100 entries
+const MEMORY_CACHE_TTL_MS = 60 * 60 * 1000;
+const MAX_CACHE_ENTRIES = 100;
+const memoryCache = new Map<string, CacheRecord>();
+const inFlightGenerations = new Map<string, Promise<AISummaryResult>>();
+
+function computeEvidenceFingerprint(
+  username: string,
+  modelName: string,
+  evidence: CompactEvidenceRecord[]
+): string {
+  const evSignature = evidence
+    .map((e) => `${e.id}:${e.status}:${e.score}`)
+    .sort()
+    .join("|");
+  return crypto
+    .createHash("sha256")
+    .update(`${username.toLowerCase()}:${modelName}:${evidence.length}:${evSignature}`)
+    .digest("hex");
+}
+
+function getFromMemoryCache(fingerprint: string): AISummaryResult | null {
+  const entry = memoryCache.get(fingerprint);
+  if (!entry) return null;
+
+  if (Date.now() - entry.createdAt > MEMORY_CACHE_TTL_MS) {
+    memoryCache.delete(fingerprint);
+    return null;
+  }
+
+  return {
+    ...entry.result,
+    sourceOrigin: "DATABASE_CACHE",
+  };
+}
+
+function setInMemoryCache(fingerprint: string, result: AISummaryResult): void {
+  // Evict oldest entries if capacity reached
+  if (memoryCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = memoryCache.keys().next().value;
+    if (oldestKey) {
+      memoryCache.delete(oldestKey);
+    }
+  }
+
+  memoryCache.set(fingerprint, {
+    result,
+    fingerprint,
+    createdAt: Date.now(),
+  });
 }
 
 export class AISummaryService {
@@ -109,91 +168,129 @@ export class AISummaryService {
       evidenceMap[ev.id] = ev;
     }
 
-    // 4. Generate with Gemini
-    const geminiRes = await this.geminiClient.generateProfileSummary(clean, signals, evidenceSelection);
+    // 4. Deterministic Cache & In-Flight Deduplication
+    const activeModel = this.geminiClient.getModelName();
+    const fingerprint = computeEvidenceFingerprint(clean, activeModel, evidenceSelection);
 
-    if (!geminiRes.success || !geminiRes.data) {
-      return {
-        success: false,
-        code: geminiRes.code || "AI_UNAVAILABLE",
-        error: geminiRes.error || "Could not synthesize profile insights with AI.",
-        sourceOrigin: "GEMINI_GENERATION",
-      };
-    }
-
-    // 5. Audit & Validate Evidence IDs
-    const rawInsights = geminiRes.data.insights || [];
-    const validatedInsights: InsightItem[] = [];
-    const seenTitles = new Set<string>();
-
-    for (const insight of rawInsights) {
-      // Must have at least 1 valid evidence ID from candidate set
-      const validIds = insight.evidenceIds.filter((id) => Boolean(evidenceMap[id]));
-      if (validIds.length === 0) {
-        console.warn(`[AISummaryService] Dropping ungrounded insight '${insight.title}' (Invalid evidence IDs: ${insight.evidenceIds.join(", ")})`);
-        continue;
+    if (!forceRefresh) {
+      const cached = getFromMemoryCache(fingerprint);
+      if (cached) {
+        return {
+          ...cached,
+          evidenceMap,
+        };
       }
+    } else {
+      memoryCache.delete(fingerprint);
+    }
 
-      // Deduplicate similar titles
-      const normalizedTitle = insight.title.toLowerCase().trim();
-      if (seenTitles.has(normalizedTitle)) {
-        continue;
+    // In-flight request deduplication to prevent simultaneous duplicate API calls
+    const existingInFlight = inFlightGenerations.get(fingerprint);
+    if (existingInFlight && !forceRefresh) {
+      return existingInFlight;
+    }
+
+    const generationTask = (async (): Promise<AISummaryResult> => {
+      try {
+        // 5. Generate with Gemini
+        const geminiRes = await this.geminiClient.generateProfileSummary(clean, signals, evidenceSelection);
+
+        if (!geminiRes.success || !geminiRes.data) {
+          return {
+            success: false,
+            code: geminiRes.code || "AI_UNAVAILABLE",
+            error: geminiRes.error || "Could not synthesize profile insights with AI.",
+            sourceOrigin: "GEMINI_GENERATION",
+          };
+        }
+
+        // 6. Audit & Validate Evidence IDs
+        const rawInsights = geminiRes.data.insights || [];
+        const validatedInsights: InsightItem[] = [];
+        const seenTitles = new Set<string>();
+
+        for (const insight of rawInsights) {
+          // Must have at least 1 valid evidence ID from candidate set
+          const validIds = insight.evidenceIds.filter((id) => Boolean(evidenceMap[id]));
+          if (validIds.length === 0) {
+            console.warn(
+              `[AISummaryService] Dropping ungrounded insight '${insight.title}' (Invalid evidence IDs: ${insight.evidenceIds.join(", ")})`
+            );
+            continue;
+          }
+
+          // Deduplicate similar titles
+          const normalizedTitle = insight.title.toLowerCase().trim();
+          if (seenTitles.has(normalizedTitle)) {
+            continue;
+          }
+          seenTitles.add(normalizedTitle);
+
+          validatedInsights.push({
+            ...insight,
+            number: validatedInsights.length + 1,
+            evidenceIds: validIds,
+          });
+        }
+
+        if (validatedInsights.length === 0) {
+          return {
+            success: false,
+            code: "VALIDATION_FAILED",
+            error: "None of the synthesized insights could be grounded in authentic stored evidence records.",
+            sourceOrigin: "GEMINI_GENERATION",
+          };
+        }
+
+        const finalOutput: ProfileSummaryOutput = {
+          username: clean,
+          totalInsights: validatedInsights.length,
+          generatedAt: new Date().toISOString(),
+          modelVersion: geminiRes.data.modelVersion || activeModel,
+          schemaVersion: "1",
+          insights: validatedInsights,
+        };
+
+        // 7. Persist to Database if user exists
+        try {
+          const user = await UserRepository.findByUsername(clean);
+          if (user) {
+            const insightsToInsert = validatedInsights.map((ins) => ({
+              userId: user.id,
+              insightIndex: ins.number,
+              category: ins.category,
+              title: ins.title,
+              finding: ins.finding,
+              classification: ins.classification,
+              confidence: ins.confidence,
+              reasoning: `Synthesized from citations: ${ins.evidenceIds.join(", ")}`,
+              modelVersion: finalOutput.modelVersion,
+            }));
+
+            await AIRepository.insertInsightsBatch(insightsToInsert);
+          }
+        } catch (dbErr: any) {
+          console.warn(`[AISummaryService] Could not persist AI summary to DB: ${dbErr.message}`);
+        }
+
+        const successResult: AISummaryResult = {
+          success: true,
+          data: finalOutput,
+          sourceOrigin: "GEMINI_GENERATION",
+          evidenceMap,
+        };
+
+        // Persist to in-memory deterministic cache
+        setInMemoryCache(fingerprint, successResult);
+
+        return successResult;
+      } finally {
+        inFlightGenerations.delete(fingerprint);
       }
-      seenTitles.add(normalizedTitle);
+    })();
 
-      validatedInsights.push({
-        ...insight,
-        number: validatedInsights.length + 1,
-        evidenceIds: validIds,
-      });
-    }
-
-    if (validatedInsights.length === 0) {
-      return {
-        success: false,
-        code: "VALIDATION_FAILED",
-        error: "None of the synthesized insights could be grounded in authentic stored evidence records.",
-        sourceOrigin: "GEMINI_GENERATION",
-      };
-    }
-
-    const finalOutput: ProfileSummaryOutput = {
-      username: clean,
-      totalInsights: validatedInsights.length,
-      generatedAt: new Date().toISOString(),
-      modelVersion: this.geminiClient.getModelName(),
-      schemaVersion: "1",
-      insights: validatedInsights,
-    };
-
-    // 6. Persist to Database if user exists
-    try {
-      const user = await UserRepository.findByUsername(clean);
-      if (user) {
-        const insightsToInsert = validatedInsights.map((ins) => ({
-          userId: user.id,
-          insightIndex: ins.number,
-          category: ins.category,
-          title: ins.title,
-          finding: ins.finding,
-          classification: ins.classification,
-          confidence: ins.confidence,
-          reasoning: `Synthesized from citations: ${ins.evidenceIds.join(", ")}`,
-          modelVersion: finalOutput.modelVersion,
-        }));
-
-        await AIRepository.insertInsightsBatch(insightsToInsert);
-      }
-    } catch (dbErr: any) {
-      console.warn(`[AISummaryService] Could not persist AI summary to DB: ${dbErr.message}`);
-    }
-
-    return {
-      success: true,
-      data: finalOutput,
-      sourceOrigin: "GEMINI_GENERATION",
-      evidenceMap,
-    };
+    inFlightGenerations.set(fingerprint, generationTask);
+    return generationTask;
   }
 }
 
