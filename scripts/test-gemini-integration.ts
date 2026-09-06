@@ -179,7 +179,7 @@ async function runGeminiIntegrationTests() {
 
     process.env.GEMINI_API_KEY = "test-mock-key-123";
     assert("Client dynamically discovers newly set GEMINI_API_KEY without restart", dynamicClient.isConfigured());
-    assert("Default model is gemini-2.5-flash-lite", dynamicClient.getModelName() === "gemini-2.5-flash-lite");
+    assert("Default model is gemini-3.5-flash-lite", dynamicClient.getModelName() === "gemini-3.5-flash-lite");
 
     process.env.GEMINI_MODEL = "custom-model-test";
     assert("Client dynamically reflects updated GEMINI_MODEL", dynamicClient.getModelName() === "custom-model-test");

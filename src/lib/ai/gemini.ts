@@ -10,7 +10,7 @@ export interface GeminiGenerationResult {
   code?: string;
 }
 
-const DEFAULT_MODEL = "gemini-2.5-flash-lite";
+const DEFAULT_MODEL = "gemini-3.5-flash-lite";
 const MAX_PROMPT_CHARS = 100_000;
 const REQUEST_TIMEOUT_MS = 25_000;
 
@@ -263,6 +263,19 @@ export class GeminiClient {
           success: false,
           code: "RATE_LIMITED",
           error: "AI service rate limit or quota exceeded. Please wait a moment before trying again.",
+        };
+      }
+
+      if (
+        status === 404 ||
+        errMsg.includes("404") ||
+        errMsg.includes("not found") ||
+        errMsg.includes("not_found")
+      ) {
+        return {
+          success: false,
+          code: "AI_PROVIDER_ERROR",
+          error: "The configured Gemini model is currently unavailable. Please verify model configuration.",
         };
       }
 
