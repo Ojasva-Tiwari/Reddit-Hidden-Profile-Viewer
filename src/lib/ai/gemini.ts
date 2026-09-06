@@ -32,6 +32,11 @@ const GEMINI_RESPONSE_SCHEMA = {
           category: {
             type: Type.STRING,
             enum: [
+              "PROFILE",
+              "PREFERENCES",
+              "LIFE_AND_TIMELINE",
+              "PERSONALITY_AND_BEHAVIOUR",
+              "INTERESTS_AND_PATTERNS",
               "INTERESTS",
               "MEDIA",
               "FOOD",
@@ -48,7 +53,7 @@ const GEMINI_RESPONSE_SCHEMA = {
           finding: { type: Type.STRING },
           classification: {
             type: Type.STRING,
-            enum: ["EXPLICIT", "STRONGLY_SUPPORTED", "WEAK_INFERENCE"],
+            enum: ["EXPLICIT", "STRONGLY_SUPPORTED", "WEAK_INFERENCE", "INSUFFICIENT_EVIDENCE"],
           },
           confidence: {
             type: Type.STRING,

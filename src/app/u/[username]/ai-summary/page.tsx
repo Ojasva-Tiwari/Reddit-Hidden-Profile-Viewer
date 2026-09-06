@@ -224,14 +224,18 @@ export default function AISummaryPage({ params }: { params: { username: string }
                 {insight.evidenceIds.length} source quote{insight.evidenceIds.length > 1 ? "s" : ""}
               </span>
 
-              <button
-                type="button"
-                onClick={() => handleOpenEvidence(insight)}
-                className="text-primary hover:underline font-medium flex items-center gap-1"
-              >
-                <span>View evidence</span>
-                <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-              </button>
+              {insight.evidenceIds && insight.evidenceIds.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => handleOpenEvidence(insight)}
+                  className="text-primary hover:underline font-medium flex items-center gap-1"
+                >
+                  <span>View evidence</span>
+                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                </button>
+              ) : (
+                <span className="text-on-surface-variant/60 italic text-xs">No citations available</span>
+              )}
             </div>
           </Card>
         ))}

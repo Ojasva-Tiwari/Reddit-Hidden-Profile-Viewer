@@ -12,7 +12,8 @@ export type ContentStatusType =
 export type AIClassificationType =
   | "EXPLICIT"
   | "STRONGLY_SUPPORTED"
-  | "WEAK_INFERENCE";
+  | "WEAK_INFERENCE"
+  | "INSUFFICIENT_EVIDENCE";
 
 export type ConfidenceType = "HIGH" | "MEDIUM" | "SPECULATIVE";
 
@@ -102,6 +103,8 @@ export function ClassificationBadge({ classification, className }: Classificatio
       case "STRONGLY_SUPPORTED":
         return "text-blue-500 border-blue-500/20 bg-blue-500/10";
       case "WEAK_INFERENCE":
+      case "INSUFFICIENT_EVIDENCE":
+      default:
         return "text-on-surface-variant border-outline bg-surface-container";
     }
   };

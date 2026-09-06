@@ -210,18 +210,24 @@ export class AISummaryService {
         const seenTitles = new Set<string>();
 
         for (const insight of rawInsights) {
-          // Must have at least 1 valid evidence ID from candidate set
-          const validIds = insight.evidenceIds.filter((id) => Boolean(evidenceMap[id]));
-          if (validIds.length === 0) {
+          const isInsufficient =
+            insight.classification === "INSUFFICIENT_EVIDENCE" ||
+            insight.finding.toLowerCase().includes("insufficient evidence") ||
+            insight.finding.toLowerCase().includes("no reliable evidence");
+
+          const validIds = (insight.evidenceIds || []).filter((id) => Boolean(evidenceMap[id]));
+
+          // Factual or inferential claims must have at least 1 valid evidence ID from candidate set
+          if (!isInsufficient && validIds.length === 0) {
             console.warn(
-              `[AISummaryService] Dropping ungrounded insight '${insight.title}' (Invalid evidence IDs: ${insight.evidenceIds.join(", ")})`
+              `[AISummaryService] Dropping ungrounded insight '${insight.title}' (Invalid evidence IDs: ${(insight.evidenceIds || []).join(", ")})`
             );
             continue;
           }
 
-          // Deduplicate similar titles
+          // Deduplicate similar titles (unless it's an insufficient evidence slot)
           const normalizedTitle = insight.title.toLowerCase().trim();
-          if (seenTitles.has(normalizedTitle)) {
+          if (!isInsufficient && seenTitles.has(normalizedTitle)) {
             continue;
           }
           seenTitles.add(normalizedTitle);
@@ -229,7 +235,9 @@ export class AISummaryService {
           validatedInsights.push({
             ...insight,
             number: validatedInsights.length + 1,
-            evidenceIds: validIds,
+            classification: isInsufficient ? "INSUFFICIENT_EVIDENCE" : insight.classification,
+            confidence: isInsufficient ? "SPECULATIVE" : insight.confidence,
+            evidenceIds: isInsufficient ? [] : validIds,
           });
         }
 
@@ -261,7 +269,10 @@ export class AISummaryService {
               category: ins.category,
               title: ins.title,
               finding: ins.finding,
-              classification: ins.classification,
+              classification:
+                ins.classification === "INSUFFICIENT_EVIDENCE"
+                  ? ("WEAK_INFERENCE" as const)
+                  : (ins.classification as any),
               confidence: ins.confidence,
               reasoning: `Synthesized from citations: ${ins.evidenceIds.join(", ")}`,
               modelVersion: finalOutput.modelVersion,
